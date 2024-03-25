@@ -1,6 +1,11 @@
 <template>
-<!-- 轮播图区域 -->
   <view>
+    <!-- 搜索框 -->
+    <view class="search-box">
+      <my-search @search="gotoSearch"></my-search>
+    </view>
+    
+    <!-- 轮播图区域 -->
     <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" circular="true">
       <swiper-item v-for="(item,i) in swiperList" :key="i">
         <navigator class="swiper-item" :url="'/subpkg/goods_detail/goods_detail?goods_id=' + item.goods_id">
@@ -75,7 +80,11 @@
           })
         })
         this.floorList = res.message
-
+      },
+      gotoSearch(){
+        uni.navigateTo({
+          url:'/subpkg/search/search'
+        })
       }
     },
     onLoad() {
@@ -118,5 +127,10 @@
   .floor-img-box{
     display: flex;
     padding-left: 10rpx;
+  }
+  .search-box{
+    position: sticky;
+    top: 0%;
+    z-index: 999;
   }
 </style>

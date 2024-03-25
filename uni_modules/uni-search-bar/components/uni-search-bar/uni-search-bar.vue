@@ -235,7 +235,7 @@
 		flex-direction: row;
 		position: relative;
 		padding: 10px;
-		// background-color: #fff;
+		background-color: #C00000;
 	}
 
 	.uni-searchbar__box {
