@@ -85,7 +85,7 @@
       },
       gotoGoodsList(goods_name){
         uni.navigateTo({
-          url:'/subpkg/goods_list/goods_list?goods_name=' + goods_name
+          url:'/subpkg/goods_list/goods_list?query=' + goods_name
         })
       }
     }
