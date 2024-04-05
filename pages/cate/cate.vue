@@ -32,7 +32,9 @@
 </template>
 
 <script>
+  import mixBadge from '@/mixins/tabbar-badge.js'
   export default {
+    mixins:[mixBadge],
     data() {
       return {
         wh:0,
@@ -49,9 +51,9 @@
         this.cateList = res.message
         this.cateLevel2 = res.message[0].children
       },
-      getActive(i){
-        this.active = i
-        this.cateLevel2 = this.cateList[i].children
+      getActive(index){
+        this.active = index
+        this.cateLevel2 = this.cateList[index].children
         
         this.scrollTop = this.scrollTop === 0 ? 1 : 0
       },

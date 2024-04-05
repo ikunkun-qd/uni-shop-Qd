@@ -30,6 +30,8 @@
 </template>
 
 <script>
+  import { mapGetters, mapState } from 'vuex';
+import cart from '../../store/cart';
   export default {
     data() {
       return {
@@ -42,7 +44,7 @@
         		}, {
         			icon: 'cart',
         			text: '购物车',
-        			info: 2
+        			info: 0
         		}],
         	    buttonGroup: [{
         	      text: '加入购物车',
@@ -60,6 +62,28 @@
     onLoad(options) {
       const goods_id = options.goods_id
       this.getGoodsDetail(goods_id)
+    },
+    computed:{
+      ...mapState('m_cart', ['cart']),
+      ...mapGetters('m_cart', ['total'])
+    },
+    watch:{
+      // total(newValue){
+      //   const finds = this.options.find(item => item.text === '购物车')
+      //   if(finds){
+      //     finds.info = newValue
+      //   }
+      // }
+      
+      total:{
+        handler(newValue){
+          const finds = this.options.find(item => item.text === '购物车')
+          if(finds){
+            finds.info = newValue
+          }
+        },
+        immediate:true
+      }
     },
     methods:{
       async getGoodsDetail(goods_id){
@@ -79,6 +103,20 @@
           uni.switchTab({
             url:'/pages/cart/cart'
           })
+        }
+      },
+      buttonClick(e){
+        // console.log(e)
+        if(e.content.text === '加入购物车'){
+          const goods = {
+            goods_id:this.goods_info.goods_id,
+            goods_name:this.goods_info.goods_name,
+            goods_price:this.goods_info.goods_price,
+            goods_count:1,
+            goods_small_logo:this.goods_info.goods_small_logo,
+            goods_state:true
+          }
+          this.$store.commit('m_cart/addCart', goods)
         }
       }
     }
