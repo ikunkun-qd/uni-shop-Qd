@@ -1,6 +1,6 @@
 <template>
   <!-- 购物车商品显示区域 -->
-  <view v-if="!cart" class="cart-container">
+  <view v-if="cart.length !== 0" class="cart-container">
     <!-- 收货地址组件 -->
     <my-address></my-address>
     

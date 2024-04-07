@@ -54,10 +54,9 @@ export default{
      
      return state.cart.reduce((sum, item) => sum += item.goods_count ,0)
     },
-    //购物车中选中商品的总数量
+    //购物车中选中商品的数量
     checkedCount(state){
-       const result = state.cart.filter(item => item.goods_state === true)
-       return result.reduce((sum, item) => sum += item.goods_count ,0)
+       return state.cart.filter(item => item.goods_state === true).reduce((sum, item) => sum += item.goods_count ,0)
     },
     //选中商品的总价
     checkedTotalPrice(state){
