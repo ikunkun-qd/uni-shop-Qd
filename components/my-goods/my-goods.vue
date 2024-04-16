@@ -4,12 +4,12 @@
       <!-- 左侧的盒子 -->
       <view class="goods-item-left">
         <radio @click="radioClickHandler" :checked="item.goods_state" color="#c00000" v-if="showRadios"></radio>
-        <image class="goods-pic" :src="item.goods_small_logo || defaultPic"></image>
+        <image @click="gotoDetail(item)" class="goods-pic" :src="item.goods_small_logo || defaultPic"></image>
       </view>
       <!-- 右侧的盒子 -->
       <view class="goods-item-right">
         <!-- 商品的名字 -->
-        <view class="goods-name">{{item.goods_name}}</view>
+        <view @click="gotoDetail(item)" class="goods-name">{{item.goods_name}}</view>
         <view class="goods-info-box">
           <view class="goods_price">￥{{item.goods_price | toFix}}</view>
           <uni-number-box :min="1" :value="item.goods_count" v-if="showCount" @change="numChange"></uni-number-box>
@@ -48,6 +48,11 @@
         this.$emit('countChange', {
           goods_id:this.item.goods_id,
           goods_count:+value
+        })
+      },
+      gotoDetail(item){
+        uni.navigateTo({
+          url:'/subpkg/goods_detail/goods_detail?goods_id=' + item.goods_id
         })
       }
     },
