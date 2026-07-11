@@ -86,11 +86,33 @@ import cart from '../../store/cart';
       }
     },
     methods:{
+      toHttpsUrl(url){
+        if(!url) return url
+        if(url.indexOf('//') === 0) return 'https:' + url
+        return url.replace(/^http:\/\//, 'https://')
+      },
+      normalizeGoodsImages(goods){
+        goods.goods_small_logo = this.toHttpsUrl(goods.goods_small_logo)
+        goods.pics = (goods.pics || []).map(item => ({
+          ...item,
+          pics_big: this.toHttpsUrl(item.pics_big),
+          pics_mid: this.toHttpsUrl(item.pics_mid),
+          pics_sma: this.toHttpsUrl(item.pics_sma),
+          pics_big_url: this.toHttpsUrl(item.pics_big_url),
+          pics_mid_url: this.toHttpsUrl(item.pics_mid_url),
+          pics_sma_url: this.toHttpsUrl(item.pics_sma_url)
+        }))
+        goods.goods_introduce = (goods.goods_introduce || '')
+          .replace(/http:\/\//g, 'https://')
+          .replace(/((?:src|data-src|href)=["'])\/\//g, '$1https://')
+          .replace(/<img/g, '<img style="display:block"')
+          .replace(/webp/g, 'jpg')
+        return goods
+      },
       async getGoodsDetail(goods_id){
         const {data:res} = await uni.$http.get('/api/public/v1/goods/detail', {goods_id})
         if(res.meta.status !== 200) return uni.$showMsg()
-        res.message.goods_introduce = res.message.goods_introduce.replace(/<img/g, '<img style="display:block"').replace(/webp/g, 'jpg')
-        this.goods_info = res.message
+        this.goods_info = this.normalizeGoodsImages(res.message)
       },
       preview(i){
         uni.previewImage({

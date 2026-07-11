@@ -4,7 +4,7 @@
       <!-- 左侧的盒子 -->
       <view class="goods-item-left">
         <radio @click="radioClickHandler" :checked="item.goods_state" color="#c00000" v-if="showRadios"></radio>
-        <image @click="gotoDetail(item)" class="goods-pic" :src="item.goods_small_logo || defaultPic"></image>
+        <image @click="gotoDetail(item)" class="goods-pic" :src="getImageUrl(item.goods_small_logo)"></image>
       </view>
       <!-- 右侧的盒子 -->
       <view class="goods-item-right">
@@ -37,6 +37,11 @@
       }
     },
     methods:{
+      getImageUrl(url){
+        const imageUrl = url || this.defaultPic
+        if(imageUrl.indexOf('//') === 0) return 'https:' + imageUrl
+        return imageUrl.replace(/^http:\/\//, 'https://')
+      },
       radioClickHandler(){
         this.$emit('radioChange', {
           goods_id:this.item.goods_id,
