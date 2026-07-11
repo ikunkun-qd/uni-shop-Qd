@@ -1,2 +1,14 @@
-/node_modules
-/unpackage/dist
+# 依赖目录
+/node_modules/
+
+# uni-app / HBuilderX 构建产物和缓存
+/unpackage/*
+!/unpackage/.gitkeep
+
+# HBuilderX 本地文件（保留项目启动配置）
+/.hbuilderx/*
+!/.hbuilderx/launch.json
+
+# Codex / 本地代理工具目录
+/.agents/
+/.codex/
