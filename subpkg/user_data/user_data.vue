@@ -104,7 +104,7 @@ onLoad((options) => {
 <style lang="scss">
 .user-data-page{
   min-height: 100vh;
-  background-color: #f7f8f6;
+  background-color: $shop-bg;
 }
 .data-tabs{
   position: sticky;
@@ -114,16 +114,16 @@ onLoad((options) => {
   height: 48px;
   align-items: center;
   justify-content: space-around;
-  background-color: white;
-  border-bottom: 1px solid #eeeeee;
+  background-color: $shop-surface;
+  border-bottom: 1px solid $shop-border;
   .data-tab{
     position: relative;
     height: 48px;
     line-height: 48px;
-    color: #666;
+      color: $shop-muted;
     font-size: 12px;
     &.active{
-      color: #2f766d;
+      color: $shop-primary-dark;
       font-weight: bold;
       &::after{
         content: '';
@@ -133,14 +133,14 @@ onLoad((options) => {
         width: 28px;
         height: 3px;
         border-radius: 3px;
-        background-color: #2f766d;
+        background-color: $shop-primary;
         transform: translateX(-50%);
       }
     }
   }
   .tab-count{
     margin-left: 2px;
-    color: #2f766d;
+    color: $shop-primary;
     font-size: 10px;
   }
 }
@@ -148,7 +148,7 @@ onLoad((options) => {
   display: flex;
   justify-content: space-between;
   padding: 14px 12px 8px;
-  color: #333;
+  color: $shop-text;
   font-size: 14px;
   .summary-count{
     color: #999;
@@ -159,24 +159,25 @@ onLoad((options) => {
   height: calc(100vh - 84px);
 }
 .data-list-content{
-  padding: 0 10px 20px;
+  padding: 0 24rpx 28rpx;
 }
 .shop-card,
 .goods-card{
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  padding: 12px;
-  border-radius: 6px;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  margin-bottom: 18rpx;
+  padding: 20rpx;
+  border: 1px solid $shop-border;
+  border-radius: $shop-radius;
+  background-color: $shop-surface;
+  box-shadow: $shop-shadow;
 }
 .shop-card{
   .shop-logo{
     width: 58px;
     height: 58px;
     border-radius: 29px;
-    background-color: #f8f8f8;
+    background-color: $shop-soft;
   }
   .shop-content{
     flex: 1;
@@ -186,7 +187,7 @@ onLoad((options) => {
     padding: 0 10px;
     .shop-name{
       overflow: hidden;
-      color: #333;
+      color: $shop-text;
       font-size: 14px;
       font-weight: bold;
       white-space: nowrap;
@@ -195,7 +196,7 @@ onLoad((options) => {
     .shop-meta,
     .shop-discount{
       margin-top: 7px;
-      color: #999;
+      color: $shop-muted;
       font-size: 11px;
     }
     .shop-discount{
@@ -231,13 +232,13 @@ onLoad((options) => {
       .goods-tag{
         padding: 2px 5px;
         border-radius: 2px;
-        color: #e66b16;
-        background-color: #fff3e8;
+      color: $shop-primary-dark;
+      background-color: $shop-soft;
         font-size: 10px;
       }
       .goods-sales{
         margin-left: 8px;
-        color: #999;
+        color: $shop-muted;
         font-size: 10px;
       }
     }
@@ -247,7 +248,7 @@ onLoad((options) => {
       justify-content: space-between;
       margin-top: auto;
       .goods-price{
-        color: #e58b4b;
+        color: $shop-accent;
         font-size: 16px;
         font-weight: bold;
       }

@@ -2,9 +2,14 @@
   <view class="my-userinfo-container">
     <!-- 头像昵称区域 -->
     <view class="top-box" @click="showProfile">
-      <image :src="userinfo.avatarUrl || '/static/demo-bear-avatar.png'" class="avatar"></image>
-      <view class="nickname">{{userinfo.nickName || '演示用户'}}</view>
-      <view class="profile-hint">点击查看个人资料</view>
+      <view class="profile-main">
+        <image :src="userinfo.avatarUrl || '/static/demo-bear-avatar.png'" class="avatar"></image>
+        <view class="profile-copy">
+          <view class="nickname">我的</view>
+          <view class="profile-hint">{{userinfo.nickName || '欢迎回来'}}</view>
+        </view>
+      </view>
+      <uni-icons type="arrowright" size="18" color="#5D7FA4"></uni-icons>
     </view>
 
     <view class="pannel-list">
@@ -34,10 +39,10 @@
             class="pannel-item order-item"
             v-for="(item, index) in orderStats"
             :key="index"
-            @click="openOrders(item.status)"
+            @click="openOrders(item.targetStatus || item.status)"
           >
             <view class="order-icon-box">
-              <image :src="item.icon" class="icon"></image>
+              <uni-icons :type="item.icon" size="24" color="#5D7FA4"></uni-icons>
               <text v-if="item.count" class="order-badge">{{item.count}}</text>
             </view>
             <text>{{item.status}}</text>
@@ -67,6 +72,14 @@
           <view class="list-item-main">
             <text>退出登录</text>
             <text class="sub-text">退出当前演示账号</text>
+          </view>
+          <uni-icons type="arrowright" size="15"></uni-icons>
+        </view>
+
+        <view class="pannel-list-item" @click="openSettings">
+          <view class="list-item-main">
+            <text>设置</text>
+            <text class="sub-text">通知与账号偏好</text>
           </view>
           <uni-icons type="arrowright" size="15"></uni-icons>
         </view>
@@ -105,10 +118,11 @@ const userStats = computed(() => [
 ])
 
 const orderStats = computed(() => [
-  { status: '待付款', count: orderCounts.value['待付款'], icon: '/static/my-icons/icon1.png' },
-  { status: '待收货', count: orderCounts.value['待收货'], icon: '/static/my-icons/icon2.png' },
-  { status: '退款/退货', count: orderCounts.value['退款/退货'], icon: '/static/my-icons/icon3.png' },
-  { status: '全部订单', count: orderCounts.value['全部订单'], icon: '/static/my-icons/icon4.png' }
+  { status: '待付款', count: orderCounts.value['待付款'], icon: 'wallet' },
+  { status: '待收货', targetStatus: '待收货', count: orderCounts.value['待收货'], icon: 'paperplane' },
+  { status: '退款/售后', targetStatus: '退款/退货', count: orderCounts.value['退款/退货'], icon: 'refreshempty' },
+  { status: '退货/退款', targetStatus: '退款/退货', count: orderCounts.value['退款/退货'], icon: 'close' },
+  { status: '全部订单', targetStatus: '全部订单', count: orderCounts.value['全部订单'], icon: 'list' }
 ])
 
 const addressText = computed(() => {
@@ -125,11 +139,23 @@ function showProfile() {
 }
 
 function openUserData(type) {
-  uni.navigateTo({ url: '/subpkg/user_data/user_data?type=' + encodeURIComponent(type) })
+  navigateToList('/subpkg/user_data/user_data?type=' + encodeURIComponent(type))
 }
 
 function openOrders(status) {
-  uni.navigateTo({ url: '/subpkg/orders/orders?status=' + encodeURIComponent(status) })
+  navigateToList('/subpkg/orders/orders?status=' + encodeURIComponent(status))
+}
+
+function navigateToList(url) {
+  uni.navigateTo({
+    url,
+    animationType: 'none',
+    animationDuration: 0
+  })
+}
+
+function openSettings() {
+  uni.showToast({ title: '设置功能演示中', icon: 'none' })
 }
 
 async function chooseAddress() {
@@ -178,42 +204,52 @@ async function logout() {
 <style lang="scss">
 .my-userinfo-container{
   min-height: 100%;
-  background-color: #f4f4f4;
+  background-color: $shop-bg;
   .top-box{
-    height: 390rpx;
-    background: linear-gradient(145deg, #2f766d, #235b54);
+    height: 220rpx;
+    padding: 0 30rpx;
+    background: #eef4fa;
+    border-bottom: 1px solid $shop-border;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
+    box-sizing: border-box;
+    .profile-main{
+      display: flex;
+      align-items: center;
+    }
     .avatar{
       display: block;
-      width: 90px;
-      height: 90px;
-      border-radius: 45px;
-      box-shadow: 0 8rpx 24rpx rgba(17, 58, 52, .25);
-      border: 2px solid white;
+      width: 116rpx;
+      height: 116rpx;
+      border-radius: 50%;
+      box-shadow: 0 12rpx 30rpx rgba(93, 127, 164, .16);
+      border: 6rpx solid $shop-soft;
+    }
+    .profile-copy{
+      margin-left: 20rpx;
     }
     .nickname{
-      color: white;
-      font-size: 16px;
+      color: $shop-text;
+      font-size: 18px;
       font-weight: bold;
-      margin-top: 10px;
     }
     .profile-hint{
-      color: rgba(255,255,255,.75);
+      color: $shop-muted;
       font-size: 12px;
-      margin-top: 8px;
+      margin-top: 8rpx;
     }
   }
   .pannel-list{
-    padding: 0 10px;
+    padding: 0 24rpx;
     position: relative;
-    top: -10px;
+    top: -16rpx;
     .pannel{
-      background-color: white;
-      border-radius: 6px;
-      margin-bottom: 8px;
+      background-color: $shop-surface;
+      border: 1px solid $shop-border;
+      border-radius: $shop-radius;
+      margin-bottom: 16rpx;
       overflow: hidden;
     }
     .pannel-body{
@@ -227,14 +263,14 @@ async function logout() {
         justify-content: space-around;
         font-size: 13px;
         padding: 12px 0;
-        color: #333;
+        color: $shop-text;
       }
       .pannel-item:active{
-        background-color: #fafafa;
+        background-color: $shop-soft;
       }
     }
     .stat-number{
-      color: #2f766d;
+      color: $shop-primary-dark;
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 6px;
@@ -243,7 +279,7 @@ async function logout() {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #f4f4f4;
+      border-bottom: 1px solid $shop-border;
       padding-right: 12px;
     }
     .pannel-title{
@@ -251,17 +287,13 @@ async function logout() {
       padding-left: 10px;
     }
     .title-more{
-      color: #999;
+      color: $shop-muted;
       font-size: 12px;
     }
     .order-icon-box{
       position: relative;
-      height: 40px;
-      margin-bottom: 6px;
-      .icon{
-        width: 35px;
-        height: 35px;
-      }
+      height: 32px;
+      margin-bottom: 2px;
       .order-badge{
         position: absolute;
         top: -5px;
@@ -271,7 +303,7 @@ async function logout() {
         line-height: 16px;
         padding: 0 3px;
         border-radius: 10px;
-      background-color: #e58b4b;
+      background-color: $shop-accent;
         color: white;
         font-size: 10px;
         text-align: center;
@@ -283,25 +315,25 @@ async function logout() {
       align-items: center;
       justify-content: space-between;
       min-height: 58px;
-      border-bottom: 1px solid #f4f4f4;
+      border-bottom: 1px solid $shop-border;
       padding: 0 10px;
       &:last-child{
         border-bottom: 0;
       }
       &:active{
-        background-color: #fafafa;
+        background-color: $shop-soft;
       }
     }
     .list-item-main{
       display: flex;
       flex-direction: column;
       .sub-text{
-        color: #999;
+        color: $shop-muted;
         font-size: 11px;
         margin-top: 4px;
       }
       .service-status{
-        color: #38a169;
+        color: $shop-primary;
       }
     }
   }

@@ -36,28 +36,32 @@ function demoLogin() {
 
 <style lang="scss">
 .login-container{
-  height: 750rpx;
-  padding: 48rpx 28rpx;
-  background-color: #f7f8f6;
+  min-height: 78vh;
+  padding: 72rpx 48rpx;
+  background-color: $shop-bg;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   .login-avatar{
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-    margin-bottom: 20px;
+    width: 132rpx;
+    height: 132rpx;
+    border-radius: 50%;
+    margin-bottom: 36rpx;
+    border: 8rpx solid $shop-surface;
+    box-shadow: 0 16rpx 36rpx rgba(93, 127, 164, .18);
   }
   .login-btn{
     margin: 10px 0;
-    width: 90%;
-    border-radius: 100px;
-    background-color: #2f766d;
+    width: 100%;
+    border-radius: 14px;
+    color: $shop-surface;
+    background-color: $shop-primary;
+    box-shadow: 0 10rpx 20rpx rgba(93, 127, 164, .18);
   }
   .login-text{
     font-size: 12px;
-    color: gray;
+    color: $shop-muted;
   }
 }
 </style>

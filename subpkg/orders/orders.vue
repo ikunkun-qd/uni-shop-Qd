@@ -110,7 +110,7 @@ onLoad((options) => {
 <style lang="scss">
 .order-page{
   min-height: 100vh;
-  background-color: #f7f8f6;
+  background-color: $shop-bg;
 }
 .order-tabs{
   position: sticky;
@@ -120,16 +120,16 @@ onLoad((options) => {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: white;
-  border-bottom: 1px solid #eeeeee;
+  background-color: $shop-surface;
+  border-bottom: 1px solid $shop-border;
   .order-tab{
     position: relative;
     height: 46px;
     line-height: 46px;
-    color: #666;
+      color: $shop-muted;
     font-size: 13px;
     &.active{
-      color: #2f766d;
+      color: $shop-primary-dark;
       font-weight: bold;
       &::after{
         content: '';
@@ -139,14 +139,14 @@ onLoad((options) => {
         width: 28px;
         height: 3px;
         border-radius: 3px;
-        background-color: #2f766d;
+        background-color: $shop-primary;
         transform: translateX(-50%);
       }
     }
   }
   .tab-count{
     margin-left: 3px;
-    color: #2f766d;
+    color: $shop-primary;
     font-size: 11px;
   }
 }
@@ -154,14 +154,15 @@ onLoad((options) => {
   height: calc(100vh - 46px);
 }
 .order-list-content{
-  padding: 10px;
+  padding: 24rpx;
 }
 .order-card{
-  margin-bottom: 10px;
-  padding: 12px;
-  border-radius: 6px;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  margin-bottom: 18rpx;
+  padding: 20rpx;
+  border: 1px solid $shop-border;
+  border-radius: $shop-radius;
+  background-color: $shop-surface;
+  box-shadow: $shop-shadow;
   &:active{
     background-color: #fafafa;
   }
@@ -170,11 +171,11 @@ onLoad((options) => {
     justify-content: space-between;
     align-items: center;
     .order-no{
-      color: #555;
+      color: $shop-muted;
       font-size: 12px;
     }
     .order-status{
-      color: #e58b4b;
+      color: $shop-accent;
       font-size: 13px;
     }
   }
@@ -182,7 +183,7 @@ onLoad((options) => {
     padding: 8px 0;
     color: #999;
     font-size: 11px;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid $shop-border;
   }
   .order-goods{
     display: flex;
@@ -192,7 +193,7 @@ onLoad((options) => {
       height: 72px;
       flex-shrink: 0;
       border-radius: 4px;
-      background-color: #f8f8f8;
+      background-color: $shop-soft;
     }
     .goods-content{
       flex: 1;
@@ -203,7 +204,7 @@ onLoad((options) => {
       padding: 3px 0 3px 10px;
       .goods-title{
         overflow: hidden;
-        color: #333;
+      color: $shop-text;
         font-size: 13px;
         line-height: 20px;
         white-space: nowrap;
@@ -214,7 +215,7 @@ onLoad((options) => {
         justify-content: space-between;
         align-items: center;
         .goods-price{
-          color: #e58b4b;
+          color: $shop-accent;
           font-size: 14px;
         }
         .goods-count{
@@ -230,9 +231,9 @@ onLoad((options) => {
     padding: 10px 0;
     color: #666;
     font-size: 12px;
-    border-top: 1px solid #f5f5f5;
+    border-top: 1px solid $shop-border;
     .payment-amount{
-      color: #e58b4b;
+      color: $shop-accent;
       font-size: 16px;
       font-weight: bold;
     }
@@ -245,17 +246,17 @@ onLoad((options) => {
       min-width: 72px;
       height: 28px;
       padding: 0 10px;
-      border: 1px solid #dddddd;
-      border-radius: 15px;
-      color: #555;
+      border: 1px solid $shop-border;
+      border-radius: 12px;
+      color: $shop-text;
       font-size: 12px;
       line-height: 28px;
       text-align: center;
       box-sizing: border-box;
       &.primary{
         color: white;
-        border-color: #2f766d;
-        background-color: #2f766d;
+        border-color: $shop-primary;
+        background-color: $shop-primary;
       }
     }
   }
@@ -271,12 +272,12 @@ onLoad((options) => {
   }
   .empty-title{
     margin-top: 15px;
-    color: #555;
+    color: $shop-text;
     font-size: 15px;
   }
   .empty-desc{
     margin-top: 8px;
-    color: #999;
+    color: $shop-muted;
     font-size: 12px;
   }
   .go-home{
@@ -285,7 +286,7 @@ onLoad((options) => {
     height: 34px;
     border-radius: 17px;
     color: white;
-    background-color: #2f766d;
+    background-color: $shop-primary;
     font-size: 13px;
     line-height: 34px;
     text-align: center;

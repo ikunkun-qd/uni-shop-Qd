@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="search-page">
     <view class="search-box">
       <uni-search-bar cancelButton="none" :radius="100" @input="input" :focus="true"></uni-search-bar>
     </view>
@@ -22,7 +22,9 @@
       
       <!-- 列表区域 -->
       <view class="history-list">
-        <uni-tag @click="gotoGoodsList(item)" :text="item" v-for="(item, i) in histories" :key="i"></uni-tag>
+        <view class="history-tag" v-for="(item, i) in histories" :key="i">
+          <uni-tag @click="gotoGoodsList(item)" :text="item"></uni-tag>
+        </view>
       </view>
     </view>
   </view>
@@ -108,20 +110,40 @@ onUnmounted(() => clearTimeout(timer.value))
 </script>
 
 <style lang="scss">
+  .search-page{
+    min-height: 100vh;
+    background: $shop-bg;
+  }
   .search-box{
     position: sticky;
-    top: 0%;
+    top: 0;
     z-index: 999;
+    padding: 10rpx 24rpx;
+    background: rgba(244, 247, 250, .94);
+    .uni-searchbar{
+      padding: 0;
+      background: transparent !important;
+    }
+    .uni-searchbar__box{
+      height: 74rpx;
+      border: 1px solid $shop-border;
+      background: $shop-surface;
+      box-shadow: 0 6rpx 18rpx rgba(28, 42, 58, .04);
+    }
   }
   .sugg-list{
-    padding: 0 15px;
+    margin: 0 24rpx;
+    padding: 0 20rpx;
+    border: 1px solid $shop-border;
+    border-radius: $shop-radius;
+    background: $shop-surface;
     .sugg-item{
       font-size: 15px;
-      padding: 30px 0;
+      padding: 28rpx 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #efefef;
+      border-bottom: 1px solid $shop-border;
       .goods-name{
         white-space: nowrap;
         overflow: hidden;
@@ -131,22 +153,29 @@ onUnmounted(() => clearTimeout(timer.value))
     }
   }
   .history-box{
-    margin: 0px 5px;
+    margin: 18rpx 24rpx;
+    padding: 24rpx;
+    border: 1px solid $shop-border;
+    border-radius: $shop-radius;
+    background: $shop-surface;
     .history-title{
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #efefef;
-      margin: 5px 5px;
+      border-bottom: 1px solid $shop-border;
+      margin: 0 0 18rpx;
       height: 40px;
+      color: $shop-text;
       font-size: 16px;
+      font-weight: 600;
     }
     .history-list{
       display: flex;
       flex-wrap: wrap;
-        uni-tag{
-          margin: 5px 5px;
-        }
+      .history-tag{
+        display: inline-flex;
+        margin: 0 14rpx 14rpx 0;
+      }
     }
   }
 </style>

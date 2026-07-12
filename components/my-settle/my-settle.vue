@@ -2,7 +2,7 @@
   <view class="my-settle-container">
     <!-- 全选 -->
     <label class="radio">
-      <radio @click="isAllChecked" :checked="isFullChecked" color="#2f766d" /><text>全选</text>
+      <radio @click="isAllChecked" :checked="isFullChecked" color="#5D7FA4" /><text>全选</text>
     </label>
 
     <!-- 合计 -->
@@ -10,11 +10,7 @@
       合计:<text class="amount">￥{{checkedTotalPrice}}</text>
     </view>
 
-    <!-- 批量操作 -->
     <view class="settle-actions">
-      <view @click="removeSelected" :class="['btn-delete', { disabled: !checkedCount }]">
-        批量删除
-      </view>
       <view @click="settlement" :class="['btn-settle', { disabled: isSubmitting }]">
         结算({{checkedCount}})
       </view>
@@ -45,18 +41,6 @@ const hasAddress = computed(() => Boolean(
 
 function isAllChecked() {
   cartStore.updateAllGoodsState(!isFullChecked.value)
-}
-
-function removeSelected() {
-  if (!checkedCount.value) return uni.$showMsg('请选择要删除的商品~')
-
-  uni.showModal({
-    title: '批量删除',
-    content: '确定删除选中的商品吗？',
-    success: (res) => {
-      if (res.confirm) cartStore.removeCheckedGoods()
-    }
-  })
 }
 
 function showTips(n) {
@@ -138,13 +122,14 @@ onUnmounted(() => {
   left: 0;
   z-index: 999;
   width: 100%;
-  height: 58px;
-  background-color: white;
+  box-sizing: border-box;
+  height: 64px;
+  background-color: $shop-surface;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 10px;
-  box-shadow: 0 -6rpx 20rpx rgba(31, 71, 66, .08);
+  padding: 0 24rpx;
+  box-shadow: 0 -10rpx 28rpx rgba(28, 42, 58, .08);
   font-size: 14px;
 
   .radio{
@@ -152,37 +137,34 @@ onUnmounted(() => {
     align-items: center;
   }
   .amount-box{
+    margin-left: auto;
+    margin-right: 18rpx;
+    white-space: nowrap;
     .amount{
-      color: #e58b4b;
+      color: $shop-accent;
       font-weight: bold;
     }
   }
   .settle-actions{
     display: flex;
-    height: 50px;
+    height: 48px;
   }
-  .btn-delete,
   .btn-settle{
-    height: 50px;
-    line-height: 50px;
+    height: 48px;
+    line-height: 48px;
     text-align: center;
-    padding: 0 10px;
+    padding: 0 18rpx;
     box-sizing: border-box;
 
     &.disabled{
       opacity: .6;
     }
   }
-  .btn-delete{
-    min-width: 90px;
-    color: #2f766d;
-    background-color: white;
-    border: 1px solid #2f766d;
-  }
   .btn-settle{
-    min-width: 100px;
+    min-width: 116px;
     color: white;
-    background-color: #2f766d;
+    background-color: $shop-primary;
+    border-radius: 12px;
   }
 }
 </style>

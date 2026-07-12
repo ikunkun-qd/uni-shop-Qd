@@ -2,7 +2,7 @@
   <view class="my-search-container" :style="{'background-color': props.bgColor}" @click="searchBoxHandler">
     <view class="my-search-box" :style="{'border-radius': props.radius+'px'}">
       <uni-icons type="search" size="17"></uni-icons>
-      <text class="placeholder">搜索</text>
+      <text class="placeholder">搜索商品</text>
     </view>
   </view>
 </template>
@@ -11,7 +11,7 @@
 const props = defineProps({
   bgColor: {
     type: String,
-    default: '#2f766d'
+    default: '#F4F7FA'
   },
   radius: {
     type: Number,
@@ -29,23 +29,25 @@ function searchBoxHandler() {
 <style lang="scss">
 .my-search-container{
   display: flex;
-  height: 50px;
-  // background-color: #2f766d;
-  padding: 8px 12px 6px;
+  height: 58px;
+  padding: 12px 24rpx 10px;
   box-sizing: border-box;
+  background: $shop-bg;
   .my-search-box{
     display: flex;
     width: 100%;
-    height: 34px;
-    box-shadow: 0 4px 14px rgba(31, 71, 66, .08);
-    background-color: #ffffff;
-    // border-radius: 18px;
-    justify-content: center;
+    height: 36px;
+    box-shadow: 0 6rpx 18rpx rgba(28, 42, 58, .04);
+    border: 1px solid $shop-border;
+    background-color: $shop-surface;
+    justify-content: flex-start;
     align-items: center;
+    padding: 0 24rpx;
+    box-sizing: border-box;
     .placeholder{
-      color: #8a9694;
+      color: $shop-muted;
       font-size: 14px;
-      margin-left: 5px;
+      margin-left: 10rpx;
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="cate-page">
     <my-search @search="gotoSearch"></my-search>
     <view class="scroll-view-container">
       <!-- 左侧滑动区 -->
@@ -75,64 +75,85 @@ useTabbarBadge()
 
 <style lang="scss">
 .scroll-view-container{
-  margin: 12rpx;
+  margin: 0 24rpx 24rpx;
   display: flex;
   overflow: hidden;
-  border-radius: 20rpx;
-  background: #ffffff;
-  box-shadow: 0 8rpx 24rpx rgba(42, 83, 77, .06);
+  min-height: calc(100vh - 90px);
+  border: 1px solid $shop-border;
+  border-radius: $shop-radius;
+  background: $shop-surface;
+  box-shadow: $shop-shadow;
+}
+.cate-page{
+  min-height: 100vh;
+  background: $shop-bg;
 }
 .cate-lv3-list{
   display:flex;
   flex-wrap:wrap;
+  padding: 0 12rpx 28rpx;
   .cate-lv3-item{
     width: 33.33%;
     flex-direction:column;
     display:flex;
     justify-content:center;
     align-items:center;
-      margin-bottom: 18rpx;
+      margin-bottom: 24rpx;
+      padding: 0 4rpx;
+      box-sizing: border-box;
   }
     image{
-      width: 112rpx;
-      height: 112rpx;
-      border-radius: 16rpx;
-      background: #f7f8f6;
+      width: 118rpx;
+      height: 118rpx;
+      border: 1px solid $shop-border;
+      border-radius: 14rpx;
+      background: $shop-soft;
     }
     text{
       margin-top: 8rpx;
-      color: #53615f;
+      color: $shop-text;
       font-size:12px;
+      text-align: center;
     }
 }
 .scroll-view-left{
-  width: 190rpx;
-  background: #f7f8f6;
+  width: 184rpx;
+  flex: 0 0 184rpx;
+  flex-shrink: 0;
+  background: $shop-soft;
+}
+.scroll-view-container > scroll-view:last-child{
+  flex: 1;
+  width: 0;
+  min-width: 0;
 }
 .cate-lv2-title{
-  text-align: center;
+  text-align: left;
   font-weight:bold;
-  font-size: 12px;
-  padding: 24rpx 0 16rpx;
-  color: #1f2a2a;
+  font-size: 13px;
+  padding: 26rpx 20rpx 18rpx;
+  color: $shop-text;
 }
 .scroll-view-left-item{
-  background-color: #F7F7F7;
+  position: relative;
+  background-color: transparent;
   text-align: center;
   line-height: 92rpx;
-  color: #6e7b79;
+  color: $shop-muted;
   font-size: 13px;
   
   &.active{
-    background-color: #FFFFFF;
-      position: relative;
+    background-color: $shop-surface;
+    color: $shop-primary-dark;
+    font-weight: 600;
     
     &::before{
       content: '';
       display: block;
       width: 6rpx;
-      height: 60rpx;
-      background-color: #2f766d;
+      height: 34rpx;
+      border-radius: 0 6rpx 6rpx 0;
+      background-color: $shop-primary;
       position: absolute;
       top: 50%;
       left: 0%;

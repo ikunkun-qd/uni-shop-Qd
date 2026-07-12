@@ -13,7 +13,7 @@
       <view class="goods-info-body">
         <view class="goods-name">{{goods_info.goods_name}}</view>
         <view class="fav" @click="toggleFavorite">
-          <uni-icons :type="isFavorite ? 'star-filled' : 'star'" size="18" :color="isFavorite ? '#e58b4b' : 'gray'"></uni-icons>
+          <uni-icons :type="isFavorite ? 'star-filled' : 'star'" size="18" :color="isFavorite ? '#BD7B62' : '#8793A2'"></uni-icons>
           <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
         </view>
       </view>
@@ -21,7 +21,9 @@
     </view>
     
     <!-- <div v-html="goods_info.goods_introduce"></div> -->
-     <rich-text :nodes="goods_info.goods_introduce"></rich-text>
+     <view class="goods-introduce">
+       <rich-text :nodes="goods_info.goods_introduce"></rich-text>
+     </view>
      
      <view class="goods-nav">
        <uni-goods-nav :fill="true"  :options="options" :buttonGroup="buttonGroup"  @click="onClick" @buttonClick="buttonClick" />
@@ -45,8 +47,8 @@ const options = ref([
   {
     icon: 'shop',
     text: '店铺',
-    infoBackgroundColor: '#007aff',
-    infoColor: '#2f766d'
+    infoBackgroundColor: '#5D7FA4',
+    infoColor: '#5D7FA4'
   },
   {
     icon: 'cart',
@@ -57,12 +59,12 @@ const options = ref([
 const buttonGroup = [
   {
     text: '加入购物车',
-    backgroundColor: '#2f766d',
+    backgroundColor: '#5D7FA4',
     color: '#fff'
   },
   {
     text: '立即购买',
-    backgroundColor: '#e58b4b',
+    backgroundColor: '#BD7B62',
     color: '#fff'
   }
 ]
@@ -162,7 +164,9 @@ onLoad((pageOptions) => {
 
 <style lang="scss">
 .goods-detail-container{
-  padding-bottom: 50px;
+  min-height: 100vh;
+  padding-bottom: 62px;
+  background: $shop-bg;
 }
 .goods-nav{
   position: fixed;
@@ -171,43 +175,62 @@ onLoad((pageOptions) => {
   width: 100%;
 }
 swiper{
-  height: 750rpx;
+  height: 680rpx;
+  background: $shop-surface;
   image{
     width: 100%;
     height: 100%;
+    object-fit: contain;
   }
 }
+.goods-introduce{
+  margin: 20rpx 24rpx 0;
+  padding: 24rpx;
+  overflow: hidden;
+  border: 1px solid $shop-border;
+  border-radius: $shop-radius;
+  background: $shop-surface;
+}
 .goods-info-box{
-  margin-left: 10px;
+  margin: 20rpx 24rpx 0;
+  padding: 24rpx;
+  border: 1px solid $shop-border;
+  border-radius: $shop-radius;
+  background: $shop-surface;
+  box-shadow: $shop-shadow;
   .price{
-    color: #e58b4b;
-    padding-top: 15px;
-    font-size: 20px;
+    color: $shop-accent;
+    padding-top: 0;
+    font-size: 24px;
+    font-weight: 700;
   }
   .goods-info-body{
     display: flex;
     justify-content: space-between;
-    .goods-name{
-      font-size: 14px;
-      margin: 15px 5px;
+      .goods-name{
+      flex: 1;
+      color: $shop-text;
+      font-size: 16px;
+      line-height: 42rpx;
+      margin: 15px 12px 12px 0;
     }
     .fav{
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 120px;
-      margin: 13px 0;
-      border-left: 2px solid #efefef;
+      width: 94px;
+      margin: 13px 0 13px 12px;
+      border-left: 1px solid $shop-border;
       text{
         font-size: 14px;
-        color: gray;
+        color: $shop-muted;
       }
     }
   }
   .yf{
     font-size: 13px;
-    color: gray;
-  }
+    color: $shop-muted;
+}
 }
 </style>

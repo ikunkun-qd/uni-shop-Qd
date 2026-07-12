@@ -4,6 +4,7 @@
 	  "path" : "pages/home/home",
 	  "style" : 
 	  {
+	    "navigationBarTitleText" : "",
 	    "enablePullDownRefresh" : false
 	  }
 	},
@@ -48,7 +49,7 @@
         {
           "navigationBarTitleText" : "",
           "enablePullDownRefresh" : true,
-          "backgroundColor": "#f7f8f6",
+          "backgroundColor": "#F4F7FA",
           "onReachBottomDistance": 150
         }
       },
@@ -88,40 +89,49 @@
     }
   ],
 	"globalStyle": {
-		"navigationBarTextStyle": "white",
+		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "小熊优品",
-		"navigationBarBackgroundColor": "#2f766d",
-		"backgroundColor": "#F7F8F6",
+		"navigationBarBackgroundColor": "#F4F7FA",
+		"backgroundColor": "#F4F7FA",
 		"app-plus": {
 			"background": "#efeff4"
 		}
 	},
+	"preloadRule": {
+		"pages/my/my": {
+			"network": "all",
+			"packages": ["subpkg"]
+		}
+	},
   "tabBar": {
-    "selectedColor": "#2f766d",
+    "color": "#8793A2",
+    "selectedColor": "#5D7FA4",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/home/home",
         "text": "首页",
-        "iconPath": "static/tab_icons/home.png",
-        "selectedIconPath": "static/tab_icons/home-active.png"
+        "iconPath": "static/tab-icons-v2/home.png",
+        "selectedIconPath": "static/tab-icons-v2/home-active.png"
       },
       {
         "pagePath": "pages/cate/cate",
         "text": "分类",
-        "iconPath": "static/tab_icons/cate.png",
-        "selectedIconPath": "static/tab_icons/cate-active.png"
+        "iconPath": "static/tab-icons-v2/cate.png",
+        "selectedIconPath": "static/tab-icons-v2/cate-active.png"
       },
       {
         "pagePath": "pages/cart/cart",
         "text": "购物车",
-        "iconPath": "static/tab_icons/cart.png",
-        "selectedIconPath": "static/tab_icons/cart-active.png"
+        "iconPath": "static/tab-icons-v2/cart.png",
+        "selectedIconPath": "static/tab-icons-v2/cart-active.png"
       },
       {
         "pagePath": "pages/my/my",
         "text": "我的",
-        "iconPath": "static/tab_icons/my.png",
-        "selectedIconPath": "static/tab_icons/my-active.png"
+        "iconPath": "static/tab-icons-v2/my.png",
+        "selectedIconPath": "static/tab-icons-v2/my-active.png"
       }
     ]
   }

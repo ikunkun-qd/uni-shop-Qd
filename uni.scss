@@ -1,11 +1,14 @@
 @import '@/uni_modules/uni-scss/variables.scss';
 
-// 小熊优品统一视觉变量：低饱和青绿色搭配暖橙色，适合轻量、优雅的购物场景。
-$shop-primary: #2f766d;
-$shop-primary-dark: #235b54;
-$shop-accent: #e58b4b;
-$shop-bg: #f7f8f6;
+// Uni Shop 统一视觉变量：白底、浅灰、低饱和雾蓝，辅以少量暖色价格强调。
+$shop-primary: #5d7fa4;
+$shop-primary-dark: #3f5f84;
+$shop-accent: #bd7b62;
+$shop-bg: #f4f7fa;
 $shop-surface: #ffffff;
-$shop-text: #1f2a2a;
-$shop-muted: #8a9694;
-$shop-border: #e8eeeb;
+$shop-text: #1c2a3a;
+$shop-muted: #8793a2;
+$shop-border: #e3eaf1;
+$shop-soft: #edf3f8;
+$shop-shadow: 0 12rpx 36rpx rgba(28, 42, 58, .06);
+$shop-radius: 18rpx;

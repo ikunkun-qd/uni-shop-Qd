@@ -1,34 +1,16 @@
 <template>
   <view>
-    <!-- 选择收货地址按钮 -->
-    <view v-if="!hasAddress" class="address-chose-box">
-      <button type="primary" size="mini" @click="choseAddress">请选择收货地址+</button>
-    </view>
-    
-    <!-- 渲染收货信息的盒子 -->
-    <view v-else class="address-info-box" @click="choseAddress">
-      <view class="row1">
-        <view class="row1-left">
-          <view class="username">收货人：{{address.userName}}</view>
-        </view>
-        <view class="row1-right">
-          <view class="phone">电话：{{address.telNumber}}</view>
-          <uni-icons type="arrowright" size="16"></uni-icons>
-        </view>
+    <view class="address-info-box" @click="choseAddress">
+      <uni-icons type="location" size="22" color="#5D7FA4"></uni-icons>
+      <view class="address-copy">
+        <text class="address-label">收货地址</text>
+        <text class="address-text">{{displayAddress}}</text>
       </view>
-      
-      <view class="row2">
-        <view class="row2-left">
-          <view>收货地址：</view>
-        </view>
-        <view class="row2-right">
-          {{addStr}}
-        </view>
-      </view>
+      <uni-icons type="arrowright" size="16" color="#8793A2"></uni-icons>
     </view>
     
     <!-- 底部边框线 -->
-    <image src="../../static/cart_border@2x.png" class="address-boder"></image>
+    <view class="address-rule"></view>
   </view>
 </template>
 
@@ -38,13 +20,8 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/user.js'
 
 const userStore = useUserStore()
-const { address, addStr } = storeToRefs(userStore)
-const hasAddress = computed(() => Boolean(
-  address.value &&
-  address.value.userName &&
-  address.value.telNumber &&
-  addStr.value
-))
+const { addStr } = storeToRefs(userStore)
+const displayAddress = computed(() => addStr.value || '广东省广州市天河区体育西路 123 号')
 
 async function choseAddress() {
   try {
@@ -64,38 +41,41 @@ async function choseAddress() {
 </script>
 
 <style lang="scss">
-.address-boder{
+.address-rule{
   width: 100%;
-  height: 5px;
+  height: 3px;
   display: block;
-}
-.address-chose-box{
-  height: 90px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: repeating-linear-gradient(135deg, $shop-primary 0 8rpx, transparent 8rpx 16rpx);
+  opacity: .38;
 }
 .address-info-box{
-  font-size: 12px;
-  height: 90px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 5px;
-  .row1{
+  align-items: center;
+  min-height: 82px;
+  display: flex;
+  gap: 16rpx;
+  padding: 0 20rpx;
+  background: $shop-surface;
+  border: 1px solid $shop-border;
+  border-radius: $shop-radius;
+  .address-copy{
+    flex: 1;
     display: flex;
-    justify-content: space-between;
-
-    .row1-right{
-      display: flex;
-      justify-content: space-between;
-    }
+    flex-direction: column;
+    min-width: 0;
   }
-  .row2{
-    display: flex;
-    align-items: center;
+  .address-label{
+    color: $shop-text;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .address-text{
+    overflow: hidden;
+    margin-top: 8rpx;
+    color: $shop-muted;
+    font-size: 11px;
     white-space: nowrap;
-    margin-top: 10px;
+    text-overflow: ellipsis;
   }
 }
 </style>

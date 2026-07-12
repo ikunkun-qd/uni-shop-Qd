@@ -3,7 +3,7 @@
     <view class="goods-item">
       <!-- 左侧的盒子 -->
       <view class="goods-item-left">
-        <radio @click="radioClickHandler" :checked="props.item.goods_state" color="#2f766d" v-if="props.showRadios"></radio>
+        <radio @click="radioClickHandler" :checked="props.item.goods_state" color="#5D7FA4" v-if="props.showRadios"></radio>
         <image @click="gotoDetail(props.item)" class="goods-pic" :src="getImageUrl(props.item.goods_small_logo)"></image>
       </view>
       <!-- 右侧的盒子 -->
@@ -74,19 +74,20 @@ function gotoDetail(item) {
   width: 100%;
   box-sizing: border-box;
   display: flex;
-  padding: 20rpx 12rpx;
-  background: #ffffff;
-  border-bottom: 1px solid #e8eeeb;
+  padding: 22rpx 18rpx;
+  background: $shop-surface;
+  border-bottom: 1px solid $shop-border;
   .goods-item-left{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-right: 10px;
+      margin-right: 16rpx;
     .goods-pic{
-      width: 180rpx;
-      height: 180rpx;
-      border-radius: 12rpx;
-      background: #f7f8f6;
+      width: 176rpx;
+      height: 176rpx;
+      border: 1px solid $shop-border;
+      border-radius: 16rpx;
+      background: $shop-soft;
       display: block;
     }
   }
@@ -96,16 +97,16 @@ function gotoDetail(item) {
     flex-direction: column;
     justify-content: space-between;
     .goods-name{
-      color: #1f2a2a;
+      color: $shop-text;
       font-size: 14px;
-      line-height: 40rpx;
+      line-height: 38rpx;
     }
     .goods-info-box{
       display: flex;
       justify-content: space-between;
       align-items: center;
       .goods_price{
-        color: #e58b4b;
+        color: $shop-accent;
         font-size: 16px;
         font-weight: 600;
       }

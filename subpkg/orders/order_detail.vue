@@ -92,42 +92,47 @@ onLoad((options) => {
 .order-detail-page{
   min-height: 100vh;
   padding-bottom: 70px;
-  background-color: #f7f8f6;
+  background-color: $shop-bg;
 }
 .status-banner{
-  padding: 20px 15px;
-  color: white;
-  background: linear-gradient(135deg, #3d8c81, #235b54);
+  margin: 24rpx;
+  padding: 28rpx 24rpx;
+  border: 1px solid rgba(93, 127, 164, .18);
+  border-radius: $shop-radius;
+  color: $shop-text;
+  background: $shop-soft;
   .status-title{
     font-size: 21px;
     font-weight: bold;
   }
   .status-desc{
     margin-top: 8px;
-    color: rgba(255,255,255,.85);
+      color: $shop-muted;
     font-size: 12px;
   }
 }
 .detail-card{
-  margin: 10px;
-  padding: 14px;
-  border-radius: 6px;
-  background-color: white;
+  margin: 0 24rpx 18rpx;
+  padding: 22rpx;
+  border: 1px solid $shop-border;
+  border-radius: $shop-radius;
+  background-color: $shop-surface;
+  box-shadow: $shop-shadow;
   .card-title{
     margin-bottom: 12px;
-    color: #333;
+    color: $shop-text;
     font-size: 15px;
     font-weight: bold;
   }
 }
 .address-card{
   .address-user{
-    color: #333;
+    color: $shop-text;
     font-size: 14px;
   }
   .address-text{
     margin-top: 8px;
-    color: #666;
+    color: $shop-muted;
     font-size: 12px;
     line-height: 18px;
   }
@@ -135,12 +140,12 @@ onLoad((options) => {
 .detail-goods{
   display: flex;
   padding: 10px 0;
-  border-top: 1px solid #f3f3f3;
+  border-top: 1px solid $shop-border;
   .goods-image{
     width: 78px;
     height: 78px;
     border-radius: 4px;
-    background-color: #f8f8f8;
+      background-color: $shop-soft;
   }
   .goods-main{
     flex: 1;
@@ -149,7 +154,7 @@ onLoad((options) => {
     justify-content: space-between;
     padding: 4px 0 4px 10px;
     .goods-title{
-      color: #333;
+      color: $shop-text;
       font-size: 13px;
       line-height: 20px;
     }
@@ -157,7 +162,7 @@ onLoad((options) => {
       display: flex;
       justify-content: space-between;
       .goods-price{
-        color: #e58b4b;
+        color: $shop-accent;
         font-size: 15px;
       }
       .goods-count{
@@ -178,17 +183,17 @@ onLoad((options) => {
 .total-row{
   margin-top: 5px;
   padding-top: 12px;
-  border-top: 1px solid #f3f3f3;
-  color: #333;
+  border-top: 1px solid $shop-border;
+  color: $shop-text;
   font-weight: bold;
   text:last-child{
-    color: #e58b4b;
+    color: $shop-accent;
     font-size: 18px;
   }
 }
 .order-info-card{
-  .info-row text:last-child{
-    color: #333;
+    .info-row text:last-child{
+    color: $shop-text;
   }
 }
 .detail-actions{
@@ -201,29 +206,29 @@ onLoad((options) => {
   justify-content: flex-end;
   gap: 8px;
   padding: 10px 12px;
-  background-color: white;
-  box-shadow: 0 -1px 5px rgba(0,0,0,.05);
+  background-color: $shop-surface;
+  box-shadow: 0 -10rpx 28rpx rgba(28,42,58,.08);
   .detail-action{
     min-width: 100px;
     height: 34px;
     padding: 0 12px;
-    border: 1px solid #dddddd;
-    border-radius: 18px;
-    color: #555;
+      border: 1px solid $shop-border;
+      border-radius: 12px;
+      color: $shop-text;
     font-size: 13px;
     line-height: 34px;
     text-align: center;
     box-sizing: border-box;
     &.primary{
       color: white;
-      border-color: #2f766d;
-      background-color: #2f766d;
+      border-color: $shop-primary;
+      background-color: $shop-primary;
     }
   }
 }
 .detail-empty{
   padding-top: 150px;
-  color: #999;
+  color: $shop-muted;
   font-size: 14px;
   text-align: center;
 }
