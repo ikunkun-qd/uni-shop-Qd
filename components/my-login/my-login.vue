@@ -1,6 +1,6 @@
 <template>
   <view class="login-container">
-    <image class="login-avatar" src="/static/demo-bear-avatar.webp"></image>
+    <image class="login-avatar" src="/static/demo-bear-avatar.png"></image>
     <button type="primary" class="login-btn" @click="demoLogin">一键登录</button>
     <text class="login-text">登录后尽享更多权益</text>
   </view>
@@ -17,7 +17,7 @@
       ...mapMutations('m_user', ['updateRedirectInfo', 'updateToken', 'updateUserinfo']),
       demoLogin(){
         this.updateUserinfo({
-          avatarUrl:'/static/demo-bear-avatar.webp',
+          avatarUrl:'/static/demo-bear-avatar.png',
           nickName:'演示用户'
         })
         this.updateToken('demo-token')

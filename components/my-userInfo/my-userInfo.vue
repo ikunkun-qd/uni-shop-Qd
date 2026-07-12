@@ -2,7 +2,7 @@
   <view class="my-userinfo-container">
     <!-- 头像昵称区域 -->
     <view class="top-box" @click="showProfile">
-      <image :src="userinfo.avatarUrl || '/static/demo-bear-avatar.webp'" class="avatar"></image>
+      <image :src="userinfo.avatarUrl || '/static/demo-bear-avatar.png'" class="avatar"></image>
       <view class="nickname">{{userinfo.nickName || '演示用户'}}</view>
       <view class="profile-hint">点击查看个人资料</view>
     </view>

@@ -11,6 +11,15 @@ function readStorageObject(key, fallback){
   }
 }
 
+function normalizeUserinfo(userinfo){
+  if(userinfo && userinfo.avatarUrl === '/static/demo-bear-avatar.webp'){
+    return Object.assign({}, userinfo, {
+      avatarUrl:'/static/demo-bear-avatar.png'
+    })
+  }
+  return userinfo
+}
+
 export default {
   namespaced:true,
   state(){
@@ -19,7 +28,7 @@ export default {
       address:readStorageObject('address', {}),
       token:uni.getStorageSync('token') || '',
       // 用户的基本信息
-      userinfo:readStorageObject('userinfo', {}),
+      userinfo:normalizeUserinfo(readStorageObject('userinfo', {})),
       // 定义重定向对象
       redirectInfo:null
     }
