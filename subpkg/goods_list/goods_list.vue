@@ -72,9 +72,17 @@ function formatPrice(value) {
   return Number(value).toFixed(2)
 }
 
+function decodeRouteValue(value = '') {
+  try {
+    return decodeURIComponent(value)
+  } catch (error) {
+    return value
+  }
+}
+
 function loadByRouteOptions(option = {}) {
-  const nextQuery = option.query || ''
-  const nextCid = option.cid || ''
+  const nextQuery = decodeRouteValue(option.query || '')
+  const nextCid = decodeRouteValue(option.cid || '')
   const isSameQuery = queryObj.query === nextQuery && queryObj.cid === nextCid
   if (isSameQuery && (goodsList.value.length || total.value || isLoading.value)) return
 
@@ -93,7 +101,7 @@ function getCurrentRouteOptions() {
     const queryString = window.location.hash.split('?')[1] || ''
     return queryString.split('&').reduce((options, pair) => {
       const [key, value = ''] = pair.split('=')
-      if (key === 'query' || key === 'cid') options[key] = decodeURIComponent(value)
+      if (key === 'query' || key === 'cid') options[key] = decodeRouteValue(value)
       return options
     }, {})
   }
