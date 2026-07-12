@@ -12,8 +12,7 @@ module.exports = {
   },
   // uni-app 的模板格式交给 Prettier，ESLint 主要负责发现逻辑错误。
   extends: ['plugin:vue/essential'],
-  // main.js 同时保留 Vue 2/Vue 3 两套条件编译入口，静态解析会误判重复声明。
-  ignorePatterns: ['main.js'],
+  // uni-app 负责处理 main.js 的运行时入口，源码本身仍参与其余规则校验。
   globals: {
     uni: 'readonly',
     plus: 'readonly',

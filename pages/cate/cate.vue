@@ -31,53 +31,57 @@
   </view>
 </template>
 
-<script>
-  import mixBadge from '@/mixins/tabbar-badge.js'
-  export default {
-    mixins:[mixBadge],
-    data() {
-      return {
-        wh:0,
-        cateList:[],
-        active:0,
-        cateLevel2:[],
-        scrollTop:0
-      };
-    },
-    methods:{
-      async getCateList(){
-        const {data:res} = await uni.$http.get('/api/public/v1/categories')
-        if(res.meta.status !== 200) return uni.$showMsg()
-        this.cateList = res.message
-        this.cateLevel2 = res.message[0].children
-      },
-      getActive(index){
-        this.active = index
-        this.cateLevel2 = this.cateList[index].children
-        
-        this.scrollTop = this.scrollTop === 0 ? 1 : 0
-      },
-      gotoGoodsList(item){
-        uni.navigateTo({
-          url:'/subpkg/goods_list/goods_list?cid=' + item.cat_id
-        })
-      },
-      gotoSearch(){
-        uni.navigateTo({
-          url:'/subpkg/search/search'
-        })
-      }
-    },
-    onLoad() {
-      const windowInfo = uni.getWindowInfo()
-      this.wh = windowInfo.windowHeight - 50
-      
-      this.getCateList()
-    }
-  }
+<script setup>
+import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { useTabbarBadge } from '@/composables/use-tabbar-badge.js'
+
+const wh = ref(0)
+const cateList = ref([])
+const active = ref(0)
+const cateLevel2 = ref([])
+const scrollTop = ref(0)
+
+async function getCateList() {
+  const { data: res } = await uni.$http.get('/api/public/v1/categories')
+  if (res.meta.status !== 200) return uni.$showMsg()
+  cateList.value = res.message
+  cateLevel2.value = res.message[0]?.children || []
+}
+
+function getActive(index) {
+  active.value = index
+  cateLevel2.value = cateList.value[index].children
+  scrollTop.value = scrollTop.value === 0 ? 1 : 0
+}
+
+function gotoGoodsList(item) {
+  uni.navigateTo({
+    url: '/subpkg/goods_list/goods_list?cid=' + item.cat_id
+  })
+}
+
+function gotoSearch() {
+  uni.navigateTo({ url: '/subpkg/search/search' })
+}
+
+onLoad(() => {
+  const windowInfo = uni.getWindowInfo()
+  wh.value = windowInfo.windowHeight - 50
+  getCateList()
+})
+useTabbarBadge()
 </script>
 
 <style lang="scss">
+.scroll-view-container{
+  margin: 12rpx;
+  display: flex;
+  overflow: hidden;
+  border-radius: 20rpx;
+  background: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(42, 83, 77, .06);
+}
 .cate-lv3-list{
   display:flex;
   flex-wrap:wrap;
@@ -87,33 +91,37 @@
     display:flex;
     justify-content:center;
     align-items:center;
-    margin-bottom:10px
+      margin-bottom: 18rpx;
   }
     image{
-      width: 60px;
-      height: 60px;
+      width: 112rpx;
+      height: 112rpx;
+      border-radius: 16rpx;
+      background: #f7f8f6;
     }
     text{
+      margin-top: 8rpx;
+      color: #53615f;
       font-size:12px;
     }
 }
-.scroll-view-container{
-  display: flex;
-}
 .scroll-view-left{
-  width: 120px;
+  width: 190rpx;
+  background: #f7f8f6;
 }
 .cate-lv2-title{
   text-align: center;
   font-weight:bold;
   font-size: 12px;
-  padding:15px, 0;
+  padding: 24rpx 0 16rpx;
+  color: #1f2a2a;
 }
 .scroll-view-left-item{
   background-color: #F7F7F7;
   text-align: center;
-  line-height: 60px;
-  font-size: 12px;
+  line-height: 92rpx;
+  color: #6e7b79;
+  font-size: 13px;
   
   &.active{
     background-color: #FFFFFF;
@@ -122,9 +130,9 @@
     &::before{
       content: '';
       display: block;
-      width: 3px;
-      height: 30px;
-      background-color: #c00000;
+      width: 6rpx;
+      height: 60rpx;
+      background-color: #2f766d;
       position: absolute;
       top: 50%;
       left: 0%;

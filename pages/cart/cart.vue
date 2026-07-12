@@ -34,64 +34,62 @@
   </view>
 </template>
 
-<script>
-  import mixBadge from '@/mixins/tabbar-badge.js'
-  import auth from '@/mixins/auth.js'
-  import { mapState, mapMutations } from 'vuex';
-  export default {
-    mixins:[mixBadge, auth],
-    computed:{
-      ...mapState('m_cart', ['cart'])
-    },
-    data() {
-      return {
-        options:[{
-          text:'删除',
-          style:{
-            backgroundColor:'#C00000'
-          }
-        }]
-      };
-    },
-    onShow(){
-      this.requireLogin('/pages/cart/cart')
-    },
-    methods:{
-      ...mapMutations('m_cart', ['removeGoods']),
-      // 思路:通过在my-goods组件中的点击事件,将goods_id, !goods_state传过来,然后通过触发@radioChange事件进行父子组件通信,在父组件中进行接受一个为对象的参数,然后调用store仓库中的updateGoodsState方法对仓库中的cart进行修改
-      radioChangeHandle(message){
-        // console.log(message)
-        this.$store.commit('m_cart/updateGoodsState', message)
-      },
-      countChangeHandle(e){
-        // console.log(e)
-        this.$store.commit('m_cart/updateGoodsCount', e)
-      },
-      swipeItemHandle(item){
-        this.removeGoods(item)
-      },
-      gotoDetail(item){
-        uni.navigateTo({
-          url:'/subpkg/goods_detail/goods_detail?goods_id=' + item.goods_id
-        })
-      }
-    }
+<script setup>
+import { onShow } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
+import { useCartStore } from '@/store/cart.js'
+import { useUserStore } from '@/store/user.js'
+import { useAuth } from '@/composables/use-auth.js'
+import { useTabbarBadge } from '@/composables/use-tabbar-badge.js'
+
+const cartStore = useCartStore()
+const userStore = useUserStore()
+const { cart } = storeToRefs(cartStore)
+const { token } = storeToRefs(userStore)
+const { requireLogin } = useAuth()
+const options = [{
+  text: '删除',
+  style: {
+    backgroundColor: '#2f766d'
   }
+}]
+
+function radioChangeHandle(message) {
+  cartStore.updateGoodsState(message)
+}
+
+function countChangeHandle(message) {
+  cartStore.updateGoodsCount(message)
+}
+
+function swipeItemHandle(item) {
+  cartStore.removeGoods(item)
+}
+
+onShow(() => {
+  requireLogin('/pages/cart/cart')
+})
+useTabbarBadge()
 </script>
 
 <style lang="scss">
 .cart-container{
-  padding-bottom: 50px;
+  padding: 12rpx 12rpx 132rpx;
 }
 .cart-title{
   display: flex;
-  height: 40px;
+  height: 48px;
   font-size: 14px;
   align-items: center;
-  padding-left: 1px;
-  border-bottom: 2px solid #efefef;
+  padding: 0 10px;
+  margin-top: 8rpx;
+  border-radius: 16rpx 16rpx 0 0;
+  background: #ffffff;
+  border-bottom: 1px solid #e8eeeb;
   .cart-title-text{
-    margin-left: 5px;
+    margin-left: 8px;
+    color: #1f2a2a;
+    font-weight: 600;
   }
 }
 .empty-cart{
@@ -102,7 +100,7 @@
   .empty-image{
     width: 90px;
     height: 90px;
-    padding-top: 150px;
+    padding-top: 180px;
   }
   .empty-text{
     margin-top: 10px;
@@ -114,7 +112,7 @@
   align-items: center;
   justify-content: center;
   height: 300px;
-  color: #999;
+  color: #8a9694;
   font-size: 14px;
 }
 </style>

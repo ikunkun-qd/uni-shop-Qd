@@ -58,60 +58,53 @@
   </view>
 </template>
 
-<script>
-  import { mapState } from 'vuex';
-  export default {
-    name:'user-data',
-    data(){
-      return {
-        currentType:'shops',
-        tabs:[
-          { type:'shops', label:'收藏的店铺' },
-          { type:'favoriteGoods', label:'收藏的商品' },
-          { type:'followedGoods', label:'关注的商品' },
-          { type:'footprints', label:'足迹' }
-        ]
-      }
-    },
-    computed:{
-      ...mapState('m_user_data', ['data', 'counts']),
-      currentTab(){
-        return this.tabs.find(tab => tab.type === this.currentType) || this.tabs[0]
-      },
-      currentItems(){
-        return this.data[this.currentType] || []
-      },
-      currentCount(){
-        return this.counts[this.currentType] || this.currentItems.length
-      }
-    },
-    onLoad(options){
-      const type = options && options.type ? decodeURIComponent(options.type) : 'shops'
-      if(this.tabs.some(tab => tab.type === type)) this.currentType = type
-      this.updateTitle()
-    },
-    methods:{
-      tabCount(type){
-        return this.counts[type] || 0
-      },
-      updateTitle(){
-        uni.setNavigationBarTitle({ title:this.currentTab.label })
-      },
-      switchType(type){
-        this.currentType = type
-        this.updateTitle()
-      },
-      formatPrice(price){
-        return Number(price).toFixed(2)
-      },
-    }
-  }
+<script setup>
+import { computed, ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
+import { useUserDataStore } from '@/store/user-data.js'
+
+const userDataStore = useUserDataStore()
+const { data, counts } = storeToRefs(userDataStore)
+const currentType = ref('shops')
+const tabs = [
+  { type: 'shops', label: '收藏的店铺' },
+  { type: 'favoriteGoods', label: '收藏的商品' },
+  { type: 'followedGoods', label: '关注的商品' },
+  { type: 'footprints', label: '足迹' }
+]
+const currentTab = computed(() => tabs.find(tab => tab.type === currentType.value) || tabs[0])
+const currentItems = computed(() => data.value[currentType.value] || [])
+const currentCount = computed(() => counts.value[currentType.value] || currentItems.value.length)
+
+function tabCount(type) {
+  return counts.value[type] || 0
+}
+
+function updateTitle() {
+  uni.setNavigationBarTitle({ title: currentTab.value.label })
+}
+
+function switchType(type) {
+  currentType.value = type
+  updateTitle()
+}
+
+function formatPrice(price) {
+  return Number(price).toFixed(2)
+}
+
+onLoad((options) => {
+  const type = options && options.type ? decodeURIComponent(options.type) : 'shops'
+  if (tabs.some(tab => tab.type === type)) currentType.value = type
+  updateTitle()
+})
 </script>
 
 <style lang="scss">
 .user-data-page{
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f7f8f6;
 }
 .data-tabs{
   position: sticky;
@@ -130,7 +123,7 @@
     color: #666;
     font-size: 12px;
     &.active{
-      color: #c00000;
+      color: #2f766d;
       font-weight: bold;
       &::after{
         content: '';
@@ -140,14 +133,14 @@
         width: 28px;
         height: 3px;
         border-radius: 3px;
-        background-color: #c00000;
+        background-color: #2f766d;
         transform: translateX(-50%);
       }
     }
   }
   .tab-count{
     margin-left: 2px;
-    color: #c00000;
+    color: #2f766d;
     font-size: 10px;
   }
 }
@@ -254,7 +247,7 @@
       justify-content: space-between;
       margin-top: auto;
       .goods-price{
-        color: #c00000;
+        color: #e58b4b;
         font-size: 16px;
         font-weight: bold;
       }

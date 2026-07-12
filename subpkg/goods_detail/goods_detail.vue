@@ -13,7 +13,7 @@
       <view class="goods-info-body">
         <view class="goods-name">{{goods_info.goods_name}}</view>
         <view class="fav" @click="toggleFavorite">
-          <uni-icons :type="isFavorite ? 'star-filled' : 'star'" size="18" :color="isFavorite ? '#c00000' : 'gray'"></uni-icons>
+          <uni-icons :type="isFavorite ? 'star-filled' : 'star'" size="18" :color="isFavorite ? '#e58b4b' : 'gray'"></uni-icons>
           <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
         </view>
       </view>
@@ -29,153 +29,135 @@
   </view>
 </template>
 
-<script>
-  import { mapGetters, mapState } from 'vuex';
-  import auth from '@/mixins/auth.js'
-  export default {
-    mixins:[auth],
-    data() {
-      return {
-        goods_info:{},
-        isFavorite:false,
-        options: [{
-        			icon: 'shop',
-        			text: '店铺',
-        			infoBackgroundColor:'#007aff',
-        			infoColor:"red"
-        		}, {
-        			icon: 'cart',
-        			text: '购物车',
-        			info: 0
-        		}],
-        	    buttonGroup: [{
-        	      text: '加入购物车',
-        	      backgroundColor: '#ff0000',
-        	      color: '#fff'
-        	    },
-        	    {
-        	      text: '立即购买',
-        	      backgroundColor: '#ffa200',
-        	      color: '#fff'
-        	    }
-        	    ]
-      };
-    },
-    onLoad(options) {
-      const goods_id = options.goods_id
-      this.getGoodsDetail(goods_id)
-    },
-    computed:{
-      ...mapState('m_cart', ['cart']),
-      ...mapGetters('m_cart', ['total'])
-    },
-    watch:{
-      // total(newValue){
-      //   const finds = this.options.find(item => item.text === '购物车')
-      //   if(finds){
-      //     finds.info = newValue
-      //   }
-      // }
-      
-      total:{
-        handler(newValue){
-          const finds = this.options.find(item => item.text === '购物车')
-          if(finds){
-            finds.info = newValue
-          }
-        },
-        immediate:true
-      }
-    },
-    methods:{
-      toHttpsUrl(url){
-        if(!url) return url
-        if(url.indexOf('//') === 0) return 'https:' + url
-        return url.replace(/^http:\/\//, 'https://')
-      },
-      normalizeGoodsImages(goods){
-        goods.goods_small_logo = this.toHttpsUrl(goods.goods_small_logo)
-        goods.pics = (goods.pics || []).map(item => ({
-          ...item,
-          pics_big: this.toHttpsUrl(item.pics_big),
-          pics_mid: this.toHttpsUrl(item.pics_mid),
-          pics_sma: this.toHttpsUrl(item.pics_sma),
-          pics_big_url: this.toHttpsUrl(item.pics_big_url),
-          pics_mid_url: this.toHttpsUrl(item.pics_mid_url),
-          pics_sma_url: this.toHttpsUrl(item.pics_sma_url)
-        }))
-        goods.goods_introduce = (goods.goods_introduce || '')
-          .replace(/http:\/\//g, 'https://')
-          .replace(/((?:src|data-src|href)=["'])\/\//g, '$1https://')
-          .replace(/<img/g, '<img style="display:block"')
-          .replace(/webp/g, 'jpg')
-        return goods
-      },
-      async getGoodsDetail(goods_id){
-        const {data:res} = await uni.$http.get('/api/public/v1/goods/detail', {goods_id})
-        if(res.meta.status !== 200) return uni.$showMsg()
-        this.goods_info = this.normalizeGoodsImages(res.message)
-      },
-      preview(i){
-        uni.previewImage({
-          current:i,
-          urls:this.goods_info.pics.map(item => item.pics_big)
-        })
-      },
-      onClick(e){
-        const text = e && e.content && e.content.text
-        if(text === '购物车'){
-          if(!this.requireLogin('/pages/cart/cart')) return
-          uni.switchTab({
-            url:'/pages/cart/cart'
-          })
-        } else if(text === '店铺'){
-          uni.showToast({
-            title:'店铺功能演示中',
-            icon:'none'
-          })
-        }
-      },
-      toggleFavorite(){
-        this.isFavorite = !this.isFavorite
-        uni.showToast({
-          title:this.isFavorite ? '收藏成功' : '已取消收藏',
-          icon:'none'
-        })
-      },
-      addCurrentGoods(showToast = true){
-        if(!this.goods_info.goods_id) return false
-        if(!this.requireLogin('/pages/cart/cart')) return false
-        const goods = {
-          goods_id:this.goods_info.goods_id,
-          goods_name:this.goods_info.goods_name,
-          goods_price:this.goods_info.goods_price,
-          goods_count:1,
-          goods_small_logo:this.goods_info.goods_small_logo,
-          goods_state:true
-        }
-        this.$store.commit('m_cart/addCart', goods)
-        if(showToast){
-          uni.showToast({
-            title:'已加入购物车',
-            icon:'success'
-          })
-        }
-        return true
-      },
-      buttonClick(e){
-        const text = e && e.content && e.content.text
-        if(text === '加入购物车'){
-          this.addCurrentGoods()
-        } else if(text === '立即购买'){
-          if(!this.addCurrentGoods(false)) return
-          uni.switchTab({
-            url:'/pages/cart/cart'
-          })
-        }
-      }
-    }
+<script setup>
+import { ref, watch } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
+import { useCartStore } from '@/store/cart.js'
+import { useAuth } from '@/composables/use-auth.js'
+
+const cartStore = useCartStore()
+const { total } = storeToRefs(cartStore)
+const { requireLogin } = useAuth()
+const goods_info = ref({})
+const isFavorite = ref(false)
+const options = ref([
+  {
+    icon: 'shop',
+    text: '店铺',
+    infoBackgroundColor: '#007aff',
+    infoColor: '#2f766d'
+  },
+  {
+    icon: 'cart',
+    text: '购物车',
+    info: 0
   }
+])
+const buttonGroup = [
+  {
+    text: '加入购物车',
+    backgroundColor: '#2f766d',
+    color: '#fff'
+  },
+  {
+    text: '立即购买',
+    backgroundColor: '#e58b4b',
+    color: '#fff'
+  }
+]
+
+function toHttpsUrl(url) {
+  if (!url) return url
+  if (url.indexOf('//') === 0) return 'https:' + url
+  return url.replace(/^http:\/\//, 'https://')
+}
+
+function normalizeGoodsImages(goods) {
+  goods.goods_small_logo = toHttpsUrl(goods.goods_small_logo)
+  goods.pics = (goods.pics || []).map(item => ({
+    ...item,
+    pics_big: toHttpsUrl(item.pics_big),
+    pics_mid: toHttpsUrl(item.pics_mid),
+    pics_sma: toHttpsUrl(item.pics_sma),
+    pics_big_url: toHttpsUrl(item.pics_big_url),
+    pics_mid_url: toHttpsUrl(item.pics_mid_url),
+    pics_sma_url: toHttpsUrl(item.pics_sma_url)
+  }))
+  goods.goods_introduce = (goods.goods_introduce || '')
+    .replace(/http:\/\//g, 'https://')
+    .replace(/((?:src|data-src|href)=["'])\/\//g, '$1https://')
+    .replace(/<img/g, '<img style="display:block"')
+    .replace(/webp/g, 'jpg')
+  return goods
+}
+
+async function getGoodsDetail(goodsId) {
+  const { data: res } = await uni.$http.get('/api/public/v1/goods/detail', { goods_id: goodsId })
+  if (res.meta.status !== 200) return uni.$showMsg()
+  goods_info.value = normalizeGoodsImages(res.message)
+}
+
+function preview(index) {
+  uni.previewImage({
+    current: index,
+    urls: goods_info.value.pics.map(item => item.pics_big)
+  })
+}
+
+function onClick(event) {
+  const text = event && event.content && event.content.text
+  if (text === '购物车') {
+    if (!requireLogin('/pages/cart/cart')) return
+    uni.switchTab({ url: '/pages/cart/cart' })
+  } else if (text === '店铺') {
+    uni.showToast({ title: '店铺功能演示中', icon: 'none' })
+  }
+}
+
+function toggleFavorite() {
+  isFavorite.value = !isFavorite.value
+  uni.showToast({
+    title: isFavorite.value ? '收藏成功' : '已取消收藏',
+    icon: 'none'
+  })
+}
+
+function addCurrentGoods(showToast = true) {
+  if (!goods_info.value.goods_id) return false
+  if (!requireLogin('/pages/cart/cart')) return false
+  cartStore.addCart({
+    goods_id: goods_info.value.goods_id,
+    goods_name: goods_info.value.goods_name,
+    goods_price: goods_info.value.goods_price,
+    goods_count: 1,
+    goods_small_logo: goods_info.value.goods_small_logo,
+    goods_state: true
+  })
+  if (showToast) {
+    uni.showToast({ title: '已加入购物车', icon: 'success' })
+  }
+  return true
+}
+
+function buttonClick(event) {
+  const text = event && event.content && event.content.text
+  if (text === '加入购物车') {
+    addCurrentGoods()
+  } else if (text === '立即购买') {
+    if (!addCurrentGoods(false)) return
+    uni.switchTab({ url: '/pages/cart/cart' })
+  }
+}
+
+watch(total, (newValue) => {
+  const finds = options.value.find(item => item.text === '购物车')
+  if (finds) finds.info = newValue
+}, { immediate: true })
+
+onLoad((pageOptions) => {
+  getGoodsDetail(pageOptions.goods_id)
+})
 </script>
 
 <style lang="scss">
@@ -198,7 +180,7 @@ swiper{
 .goods-info-box{
   margin-left: 10px;
   .price{
-    color: #c00000;
+    color: #e58b4b;
     padding-top: 15px;
     font-size: 20px;
   }

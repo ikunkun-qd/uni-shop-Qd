@@ -28,90 +28,83 @@
   </view>
 </template>
 
-<script>
-  export default {
-    data() {
-      return {
-        timer:null,
-        kw:'',
-        searchList:[],
-        historyList:[]
-      };
-    },
-    computed:{
-      histories(){
-        return [...this.historyList].reverse()
-      }
-    },
-    onLoad() {
-      const storedHistory = uni.getStorageSync('kw')
-      if (Array.isArray(storedHistory)) {
-        this.historyList = storedHistory
-        return
-      }
+<script setup>
+import { computed, onUnmounted, ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 
-      if (typeof storedHistory !== 'string' || storedHistory.trim() === '') {
-        this.historyList = []
-        return
-      }
+const timer = ref(null)
+const kw = ref('')
+const searchList = ref([])
+const historyList = ref([])
+const histories = computed(() => [...historyList.value].reverse())
 
-      try {
-        const parsedHistory = JSON.parse(storedHistory)
-        this.historyList = Array.isArray(parsedHistory) ? parsedHistory : []
-      } catch (error) {
-        this.historyList = []
-      }
-    },
-    methods:{
-      input(e){
-        const value = typeof e === 'string'
-          ? e
-          : (e && (e.value || (e.detail && e.detail.value))) || ''
-        clearTimeout(this.timer)
-        this.timer = setTimeout(()=>{
-          this.kw = value.trim()
-          this.getSearchList()
-        }, 1000)
-      },
-      async getSearchList(){
-      if(this.kw === ''){
-        this.searchList = []
-        return
-      }
-      const {data:res} = await uni.$http.get('/api/public/v1/goods/qsearch', {query:this.kw})
-      if(res.meta.status !== 200) return uni.$showMsg()
-      this.searchList = res.message
-      this.saveSearchList()
-      },
-      gotoDetail(item){
-        uni.navigateTo({
-          url:'/subpkg/goods_detail/goods_detail?goods_id=' + item.goods_id
-        })
-      },
-      saveSearchList(){
-       // this.historyList.push(this.kw)
-        const set = new Set(this.historyList)
-        set.delete(this.kw)
-        set.add(this.kw)
-        this.historyList = Array.from(set)
-        
-        // 本地持久化
-        uni.setStorageSync('kw', JSON.stringify(this.historyList))
-      },
-      clean(){
-        this.historyList = []
-        uni.setStorageSync('kw', JSON.stringify([]))
-      },
-      gotoGoodsList(goods_name){
-        uni.navigateTo({
-          url:'/subpkg/goods_list/goods_list?query=' + encodeURIComponent(goods_name)
-        })
-      }
-    },
-    beforeDestroy() {
-      clearTimeout(this.timer)
-    }
+function loadHistory() {
+  const storedHistory = uni.getStorageSync('kw')
+  if (Array.isArray(storedHistory)) {
+    historyList.value = storedHistory
+    return
   }
+  if (typeof storedHistory !== 'string' || storedHistory.trim() === '') {
+    historyList.value = []
+    return
+  }
+  try {
+    const parsedHistory = JSON.parse(storedHistory)
+    historyList.value = Array.isArray(parsedHistory) ? parsedHistory : []
+  } catch (error) {
+    historyList.value = []
+  }
+}
+
+function input(event) {
+  const value = typeof event === 'string'
+    ? event
+    : (event && (event.value || (event.detail && event.detail.value))) || ''
+  clearTimeout(timer.value)
+  timer.value = setTimeout(() => {
+    kw.value = value.trim()
+    getSearchList()
+  }, 1000)
+}
+
+async function getSearchList() {
+  if (kw.value === '') {
+    searchList.value = []
+    return
+  }
+  const { data: res } = await uni.$http.get('/api/public/v1/goods/qsearch', { query: kw.value })
+  if (res.meta.status !== 200) return uni.$showMsg()
+  searchList.value = res.message
+  saveSearchList()
+}
+
+function gotoDetail(item) {
+  uni.navigateTo({
+    url: '/subpkg/goods_detail/goods_detail?goods_id=' + item.goods_id
+  })
+}
+
+function saveSearchList() {
+  const set = new Set(historyList.value)
+  set.delete(kw.value)
+  set.add(kw.value)
+  historyList.value = Array.from(set)
+  uni.setStorageSync('kw', JSON.stringify(historyList.value))
+}
+
+function clean() {
+  historyList.value = []
+  uni.setStorageSync('kw', JSON.stringify([]))
+}
+
+function gotoGoodsList(goodsName) {
+  uni.navigateTo({
+    url: '/subpkg/goods_list/goods_list?query=' + encodeURIComponent(goodsName)
+  })
+}
+
+onLoad(loadHistory)
+onUnmounted(() => clearTimeout(timer.value))
 </script>
 
 <style lang="scss">

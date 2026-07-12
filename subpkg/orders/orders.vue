@@ -54,66 +54,63 @@
   </view>
 </template>
 
-<script>
-  import { mapState } from 'vuex';
-  export default {
-    name:'order-list',
-    data(){
-      return {
-        tabs:['全部订单', '待付款', '待收货', '退款/退货'],
-        activeStatus:'全部订单'
-      }
-    },
-    computed:{
-      ...mapState('m_order', ['orders']),
-      filteredOrders(){
-        if(this.activeStatus === '全部订单') return this.orders
-        return this.orders.filter(order => order.status === this.activeStatus)
-      }
-    },
-    onLoad(options){
-      const status = options && options.status ? decodeURIComponent(options.status) : '全部订单'
-      if(this.tabs.indexOf(status) !== -1) this.activeStatus = status
-    },
-    methods:{
-      tabCount(tab){
-        if(tab === '全部订单') return this.orders.length
-        return this.orders.filter(order => order.status === tab).length
-      },
-      changeStatus(status){
-        this.activeStatus = status
-      },
-      formatPrice(price){
-        return Number(price).toFixed(2)
-      },
-      totalCount(order){
-        return order.items.reduce((total, item) => total + item.count, 0)
-      },
-      openDetail(order){
-        uni.navigateTo({
-          url:'/subpkg/orders/order_detail?orderNo=' + encodeURIComponent(order.orderNo)
-        })
-      },
-      payDemo(order){
-        this.$store.commit('m_order/markPaid', order.orderNo)
-        uni.showToast({
-          title:'支付成功（演示）',
-          icon:'success'
-        })
-      },
-      goHome(){
-        uni.switchTab({
-          url:'/pages/home/home'
-        })
-      }
-    }
-  }
+<script setup>
+import { computed, ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
+import { useOrderStore } from '@/store/order.js'
+
+const orderStore = useOrderStore()
+const { orders } = storeToRefs(orderStore)
+const tabs = ['全部订单', '待付款', '待收货', '退款/退货']
+const activeStatus = ref('全部订单')
+const filteredOrders = computed(() => {
+  if (activeStatus.value === '全部订单') return orders.value
+  return orders.value.filter(order => order.status === activeStatus.value)
+})
+
+function tabCount(tab) {
+  if (tab === '全部订单') return orders.value.length
+  return orders.value.filter(order => order.status === tab).length
+}
+
+function changeStatus(status) {
+  activeStatus.value = status
+}
+
+function formatPrice(price) {
+  return Number(price).toFixed(2)
+}
+
+function totalCount(order) {
+  return order.items.reduce((total, item) => total + item.count, 0)
+}
+
+function openDetail(order) {
+  uni.navigateTo({
+    url: '/subpkg/orders/order_detail?orderNo=' + encodeURIComponent(order.orderNo)
+  })
+}
+
+function payDemo(order) {
+  orderStore.markPaid(order.orderNo)
+  uni.showToast({ title: '支付成功（演示）', icon: 'success' })
+}
+
+function goHome() {
+  uni.switchTab({ url: '/pages/home/home' })
+}
+
+onLoad((options) => {
+  const status = options && options.status ? decodeURIComponent(options.status) : '全部订单'
+  if (tabs.indexOf(status) !== -1) activeStatus.value = status
+})
 </script>
 
 <style lang="scss">
 .order-page{
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f7f8f6;
 }
 .order-tabs{
   position: sticky;
@@ -132,7 +129,7 @@
     color: #666;
     font-size: 13px;
     &.active{
-      color: #c00000;
+      color: #2f766d;
       font-weight: bold;
       &::after{
         content: '';
@@ -142,14 +139,14 @@
         width: 28px;
         height: 3px;
         border-radius: 3px;
-        background-color: #c00000;
+        background-color: #2f766d;
         transform: translateX(-50%);
       }
     }
   }
   .tab-count{
     margin-left: 3px;
-    color: #c00000;
+    color: #2f766d;
     font-size: 11px;
   }
 }
@@ -177,7 +174,7 @@
       font-size: 12px;
     }
     .order-status{
-      color: #c00000;
+      color: #e58b4b;
       font-size: 13px;
     }
   }
@@ -217,7 +214,7 @@
         justify-content: space-between;
         align-items: center;
         .goods-price{
-          color: #c00000;
+          color: #e58b4b;
           font-size: 14px;
         }
         .goods-count{
@@ -235,7 +232,7 @@
     font-size: 12px;
     border-top: 1px solid #f5f5f5;
     .payment-amount{
-      color: #c00000;
+      color: #e58b4b;
       font-size: 16px;
       font-weight: bold;
     }
@@ -257,8 +254,8 @@
       box-sizing: border-box;
       &.primary{
         color: white;
-        border-color: #c00000;
-        background-color: #c00000;
+        border-color: #2f766d;
+        background-color: #2f766d;
       }
     }
   }
@@ -288,7 +285,7 @@
     height: 34px;
     border-radius: 17px;
     color: white;
-    background-color: #c00000;
+    background-color: #2f766d;
     font-size: 13px;
     line-height: 34px;
     text-align: center;

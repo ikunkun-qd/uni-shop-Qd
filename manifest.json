@@ -99,5 +99,5 @@
         "usingComponents" : true,
         "requiredPrivateInfos" : [ "chooseAddress" ]
     },
-    "vueVersion" : "2"
+    "vueVersion" : "3"
 }

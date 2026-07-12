@@ -1,3 +1,5 @@
+import { defineStore } from 'pinia'
+
 const mockData = {
   shops:[
     { id:1, name:'小熊官方旗舰店', category:'数码家电', fans:'12.8万粉丝', discount:'新人专享满199减20', logo:'/static/user-data/shop-electronics.jpg' },
@@ -37,12 +39,9 @@ const mockCounts = Object.keys(mockData).reduce((counts, type) => {
   return counts
 }, {})
 
-export default {
-  namespaced:true,
-  state(){
-    return {
-      data:mockData,
-      counts:mockCounts
-    }
-  }
-}
+export const useUserDataStore = defineStore('userData', {
+  state: () => ({
+    data: mockData,
+    counts: mockCounts
+  })
+})

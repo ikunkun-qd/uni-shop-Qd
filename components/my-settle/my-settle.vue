@@ -2,7 +2,7 @@
   <view class="my-settle-container">
     <!-- 全选 -->
     <label class="radio">
-      <radio @click="isAllChecked" :checked="isFullChecked" color="#c00000" /><text>全选</text>
+      <radio @click="isAllChecked" :checked="isFullChecked" color="#2f766d" /><text>全选</text>
     </label>
 
     <!-- 合计 -->
@@ -22,123 +22,113 @@
   </view>
 </template>
 
-<script>
-  import { mapGetters, mapMutations, mapState } from 'vuex';
-  export default {
-    name:"my-settle",
-    data() {
-      return {
-        seconds:3,
-        timer:null,
-        isSubmitting:false
-      };
-    },
-    computed:{
-      ...mapGetters('m_cart', ['checkedCount', 'total', 'checkedTotalPrice']),
-      ...mapGetters('m_user', ['addStr']),
-      ...mapState('m_user', ['token', 'address']),
-      ...mapState('m_cart', ['cart']),
-      isFullChecked(){
-        return this.total === this.checkedCount
-      },
-      hasAddress(){
-        return Boolean(
-          this.address &&
-          this.address.userName &&
-          this.address.telNumber &&
-          this.addStr
-        )
-      }
-    },
-    methods:{
-      ...mapMutations('m_cart', ['updateAllGoodsState', 'removeCheckedGoods']),
-      ...mapMutations('m_user', ['updateRedirectInfo']),
+<script setup>
+import { computed, onUnmounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useCartStore } from '@/store/cart.js'
+import { useUserStore } from '@/store/user.js'
 
-      isAllChecked(){
-        this.updateAllGoodsState(!this.isFullChecked)
-      },
-      removeSelected(){
-        if(!this.checkedCount) return uni.$showMsg('请选择要删除的商品~')
+const cartStore = useCartStore()
+const userStore = useUserStore()
+const { checkedCount, total, checkedTotalPrice, cart } = storeToRefs(cartStore)
+const { addStr, token, address } = storeToRefs(userStore)
+const seconds = ref(3)
+const timer = ref(null)
+const isSubmitting = ref(false)
+const isFullChecked = computed(() => total.value === checkedCount.value)
+const hasAddress = computed(() => Boolean(
+  address.value &&
+  address.value.userName &&
+  address.value.telNumber &&
+  addStr.value
+))
 
-        uni.showModal({
-          title:'批量删除',
-          content:'确定删除选中的商品吗？',
-          success:(res)=>{
-            if(res.confirm) this.removeCheckedGoods()
-          }
-        })
-      },
-      showTips(n){
-        uni.showToast({
-          icon:'none',
-          title:'请登录后再结算！'+n+' 秒后自动跳转到登录页',
-          duration:1500,
-          mask:true
-        })
-      },
-      settlement(){
-        if(this.isSubmitting) return
-        if(!this.hasAddress) return uni.$showMsg('请选择收货地址~')
-        if(!this.checkedCount) return uni.$showMsg('请选择要结算的商品~')
-        if(!this.token) return this.delayNavigate()
+function isAllChecked() {
+  cartStore.updateAllGoodsState(!isFullChecked.value)
+}
 
-        this.payOrder()
-      },
-      delayNavigate(){
-        if(this.timer) clearInterval(this.timer)
-        this.seconds = 3
-        this.showTips(this.seconds)
-        this.timer = setInterval(()=>{
-          this.seconds--
-          if(this.seconds <= 0){
-            clearInterval(this.timer)
-            this.timer = null
-            this.updateRedirectInfo({
-              openType:'switchTab',
-              from:'/pages/cart/cart'
-            })
-            uni.switchTab({
-              url:'/pages/my/my'
-            })
-            return
-          }
-          this.showTips(this.seconds)
-        }, 1000)
-      },
-      payOrder(){
-        this.isSubmitting = true
-        // 面试演示使用本地订单，不调用真实支付接口。
-        const orderInfo = {
-          order_price:Number(this.checkedTotalPrice),
-          consignee_addr:this.addStr,
-          goods:this.cart
-            .filter(item => item.goods_state === true)
-            .map(item => ({
-              goods_id:item.goods_id,
-              goods_number:item.goods_count,
-              goods_price:item.goods_price
-            }))
-        }
+function removeSelected() {
+  if (!checkedCount.value) return uni.$showMsg('请选择要删除的商品~')
 
-        uni.showLoading({ title:'订单提交中...' })
-        setTimeout(()=>{
-          uni.hideLoading()
-          this.$store.commit('m_cart/removeCheckedGoods')
-          this.isSubmitting = false
-          uni.showToast({
-            title:'支付成功（演示）',
-            icon:'success'
-          })
-        }, 500)
-
-        return orderInfo
-      }
-    },
-    beforeDestroy(){
-      if(this.timer) clearInterval(this.timer)
-      this.timer = null
+  uni.showModal({
+    title: '批量删除',
+    content: '确定删除选中的商品吗？',
+    success: (res) => {
+      if (res.confirm) cartStore.removeCheckedGoods()
     }
+  })
+}
+
+function showTips(n) {
+  uni.showToast({
+    icon: 'none',
+    title: '请登录后再结算！' + n + ' 秒后自动跳转到登录页',
+    duration: 1500,
+    mask: true
+  })
+}
+
+function settlement() {
+  if (isSubmitting.value) return
+  if (!hasAddress.value) return uni.$showMsg('请选择收货地址~')
+  if (!checkedCount.value) return uni.$showMsg('请选择要结算的商品~')
+  if (!token.value) return delayNavigate()
+  payOrder()
+}
+
+function delayNavigate() {
+  if (timer.value) clearInterval(timer.value)
+  seconds.value = 3
+  showTips(seconds.value)
+  timer.value = setInterval(() => {
+    seconds.value--
+    if (seconds.value <= 0) {
+      clearInterval(timer.value)
+      timer.value = null
+      userStore.updateRedirectInfo({
+        openType: 'switchTab',
+        from: '/pages/cart/cart'
+      })
+      uni.switchTab({ url: '/pages/my/my' })
+      return
+    }
+    showTips(seconds.value)
+  }, 1000)
+}
+
+function payOrder() {
+  isSubmitting.value = true
+  // 面试演示使用本地订单，不调用真实支付接口。
+  const orderInfo = {
+    order_price: Number(checkedTotalPrice.value),
+    consignee_addr: addStr.value,
+    goods: cart.value
+      .filter(item => item.goods_state === true)
+      .map(item => ({
+        goods_id: item.goods_id,
+        goods_number: item.goods_count,
+        goods_price: item.goods_price
+      }))
   }
+
+  uni.showLoading({ title: '订单提交中...' })
+  setTimeout(() => {
+    uni.hideLoading()
+    cartStore.removeCheckedGoods()
+    isSubmitting.value = false
+    uni.showToast({
+      title: '支付成功（演示）',
+      icon: 'success'
+    })
+  }, 500)
+
+  return orderInfo
+}
+
+onUnmounted(() => {
+  if (timer.value) clearInterval(timer.value)
+  timer.value = null
+})
 </script>
 
 <style lang="scss">
@@ -148,12 +138,13 @@
   left: 0;
   z-index: 999;
   width: 100%;
-  height: 50px;
+  height: 58px;
   background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 5px;
+  padding: 0 10px;
+  box-shadow: 0 -6rpx 20rpx rgba(31, 71, 66, .08);
   font-size: 14px;
 
   .radio{
@@ -162,7 +153,7 @@
   }
   .amount-box{
     .amount{
-      color: #c00000;
+      color: #e58b4b;
       font-weight: bold;
     }
   }
@@ -184,14 +175,14 @@
   }
   .btn-delete{
     min-width: 90px;
-    color: #c00000;
+    color: #2f766d;
     background-color: white;
-    border: 1px solid #c00000;
+    border: 1px solid #2f766d;
   }
   .btn-settle{
     min-width: 100px;
     color: white;
-    background-color: #c00000;
+    background-color: #2f766d;
   }
 }
 </style>

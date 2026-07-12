@@ -1,3 +1,5 @@
+import { defineStore } from 'pinia'
+
 const mockOrders = [
   {
     orderNo:'202607120001',
@@ -93,27 +95,22 @@ const mockOrders = [
   }
 ]
 
-export default {
-  namespaced:true,
-  state(){
-    return {
-      orders:mockOrders
+export const useOrderStore = defineStore('order', {
+  state: () => ({
+    orders: mockOrders
+  }),
+  getters: {
+    orderCounts: (state) => ({
+      '待付款': state.orders.filter(order => order.status === '待付款').length,
+      '待收货': state.orders.filter(order => order.status === '待收货').length,
+      '退款/退货': state.orders.filter(order => order.status === '退款/退货').length,
+      '全部订单': state.orders.length
+    })
+  },
+  actions: {
+    markPaid(orderNo) {
+      const order = this.orders.find(item => item.orderNo === orderNo)
+      if (order) order.status = '待收货'
     }
   },
-  getters:{
-    orderCounts(state){
-      return {
-        '待付款':state.orders.filter(order => order.status === '待付款').length,
-        '待收货':state.orders.filter(order => order.status === '待收货').length,
-        '退款/退货':state.orders.filter(order => order.status === '退款/退货').length,
-        '全部订单':state.orders.length
-      }
-    }
-  },
-  mutations:{
-    markPaid(state, orderNo){
-      const order = state.orders.find(item => item.orderNo === orderNo)
-      if(order) order.status = '待收货'
-    }
-  }
-}
+})

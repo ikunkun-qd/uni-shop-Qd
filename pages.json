@@ -48,7 +48,7 @@
         {
           "navigationBarTitleText" : "",
           "enablePullDownRefresh" : true,
-          "backgroundColor": "#f8f8f8",
+          "backgroundColor": "#f7f8f6",
           "onReachBottomDistance": 150
         }
       },
@@ -90,14 +90,14 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "小熊优品",
-		"navigationBarBackgroundColor": "#C00000",
-		"backgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#2f766d",
+		"backgroundColor": "#F7F8F6",
 		"app-plus": {
 			"background": "#efeff4"
 		}
 	},
   "tabBar": {
-    "selectedColor": "#C00000",
+    "selectedColor": "#2f766d",
     "list": [
       {
         "pagePath": "pages/home/home",

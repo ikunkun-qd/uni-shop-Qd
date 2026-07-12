@@ -1,63 +1,37 @@
-// #ifndef VUE3
-import Vue from 'vue'
-import App from './App'
-import store from '@/store/store'
-
-//导入网络请求的包
+import { createSSRApp } from 'vue'
+import App from './App.vue'
+import pinia from '@/store/store'
+import { useUserStore } from '@/store/user.js'
 import { $http } from '@escook/request-miniprogram'
 
-// 将$http挂在到uni顶级对象中
-uni.$http = $http
+const userStore = useUserStore(pinia)
 
-// 配置请求根路径
+// 统一配置请求能力，确保小程序端请求拦截器始终生效。
+uni.$http = $http
 $http.baseUrl = 'https://api-hmugo-web.itheima.net'
 
-//请求拦截器
 $http.beforeRequest = function (options) {
-  uni.showLoading({
-    title:'数据加载中...'
-  })
-  // console.log(options)
-  // 判断有权限接口
-  if(options.url.indexOf('/my') !== -1){
+  uni.showLoading({ title: '数据加载中...' })
+  if (options.url.indexOf('/my') !== -1) {
     options.headers = {
-      Authorization:store.state.m_user.token
+      ...(options.headers || {}),
+      Authorization: userStore.token
     }
   }
 }
 
-//响应拦截器
 $http.afterRequest = function () {
   uni.hideLoading()
 }
 
-//封装弹框方法
-uni.$showMsg = function(title='数据请求失败！', duration=1500){
-  uni.showToast({
-    icon:'none',
-    title,
-    duration
-  })
+uni.$showMsg = function (title = '数据请求失败！', duration = 1500) {
+  uni.showToast({ icon: 'none', title, duration })
 }
 
-Vue.config.productionTip = false
-
-App.mpType = 'app'
-
-const app = new Vue({
-    ...App,
-    store,
-})
-app.$mount()
-// #endif
-
-// #ifdef VUE3
-import { createSSRApp } from 'vue'
-import App from './App.vue'
 export function createApp() {
   const app = createSSRApp(App)
+  app.use(pinia)
   return {
     app
   }
 }
-// #endif

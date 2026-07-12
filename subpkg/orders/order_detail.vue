@@ -48,63 +48,56 @@
   <view v-else class="detail-empty">订单不存在或已被删除</view>
 </template>
 
-<script>
-  import { mapState } from 'vuex';
-  export default {
-    name:'order-detail',
-    data(){
-      return {
-        orderNo:''
-      }
-    },
-    computed:{
-      ...mapState('m_order', ['orders']),
-      order(){
-        return this.orders.find(item => item.orderNo === this.orderNo)
-      },
-      statusDescription(){
-        if(!this.order) return ''
-        const descriptions = {
-          '待付款':'请在订单有效期内完成支付',
-          '待收货':'商品正在配送中，请耐心等待',
-          '退款/退货':'售后申请正在处理中'
-        }
-        return descriptions[this.order.status] || '订单已完成'
-      }
-    },
-    onLoad(options){
-      this.orderNo = options && options.orderNo ? decodeURIComponent(options.orderNo) : ''
-    },
-    methods:{
-      formatPrice(price){
-        return Number(price).toFixed(2)
-      },
-      goOrderList(){
-        uni.navigateTo({
-          url:'/subpkg/orders/orders?status=' + encodeURIComponent(this.order.status)
-        })
-      },
-      payDemo(){
-        this.$store.commit('m_order/markPaid', this.order.orderNo)
-        uni.showToast({
-          title:'支付成功（演示）',
-          icon:'success'
-        })
-      },
-    }
+<script setup>
+import { computed, ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
+import { useOrderStore } from '@/store/order.js'
+
+const orderStore = useOrderStore()
+const { orders } = storeToRefs(orderStore)
+const orderNo = ref('')
+const order = computed(() => orders.value.find(item => item.orderNo === orderNo.value))
+const statusDescription = computed(() => {
+  if (!order.value) return ''
+  const descriptions = {
+    '待付款': '请在订单有效期内完成支付',
+    '待收货': '商品正在配送中，请耐心等待',
+    '退款/退货': '售后申请正在处理中'
   }
+  return descriptions[order.value.status] || '订单已完成'
+})
+
+function formatPrice(price) {
+  return Number(price).toFixed(2)
+}
+
+function goOrderList() {
+  uni.navigateTo({
+    url: '/subpkg/orders/orders?status=' + encodeURIComponent(order.value.status)
+  })
+}
+
+function payDemo() {
+  orderStore.markPaid(order.value.orderNo)
+  uni.showToast({ title: '支付成功（演示）', icon: 'success' })
+}
+
+onLoad((options) => {
+  orderNo.value = options && options.orderNo ? decodeURIComponent(options.orderNo) : ''
+})
 </script>
 
 <style lang="scss">
 .order-detail-page{
   min-height: 100vh;
   padding-bottom: 70px;
-  background-color: #f5f5f5;
+  background-color: #f7f8f6;
 }
 .status-banner{
   padding: 20px 15px;
   color: white;
-  background: linear-gradient(135deg, #d73535, #c00000);
+  background: linear-gradient(135deg, #3d8c81, #235b54);
   .status-title{
     font-size: 21px;
     font-weight: bold;
@@ -164,7 +157,7 @@
       display: flex;
       justify-content: space-between;
       .goods-price{
-        color: #c00000;
+        color: #e58b4b;
         font-size: 15px;
       }
       .goods-count{
@@ -189,7 +182,7 @@
   color: #333;
   font-weight: bold;
   text:last-child{
-    color: #c00000;
+    color: #e58b4b;
     font-size: 18px;
   }
 }
@@ -223,8 +216,8 @@
     box-sizing: border-box;
     &.primary{
       color: white;
-      border-color: #c00000;
-      background-color: #c00000;
+      border-color: #2f766d;
+      background-color: #2f766d;
     }
   }
 }

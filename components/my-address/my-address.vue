@@ -32,46 +32,35 @@
   </view>
 </template>
 
-<script>
-  import { mapState, mapMutations, mapGetters } from 'vuex';
-  export default {
-    name:"my-address",
-    data() {
-      return {
-        // address:{}
-      };
-    },
-    methods:{
-      ...mapMutations('m_user', ['updateAddress']),
-      async choseAddress(){
-          try {
-            const result = await uni.chooseAddress()
-            const err = Array.isArray(result) ? result[0] : null
-            const succ = Array.isArray(result) ? result[1] : result
-            if(!err && succ && succ.errMsg === 'chooseAddress:ok'){
-              this.updateAddress(succ)
-            }
-          } catch (error) {
-            const errorMessage = error && error.errMsg ? error.errMsg : ''
-            if(errorMessage.indexOf('cancel') === -1){
-              uni.$showMsg('收货地址选择失败，请重试')
-            }
-          }
-        }
-      },
-      computed:{
-        ...mapState('m_user', ['address']),
-        ...mapGetters('m_user', ['addStr']),
-        hasAddress(){
-          return Boolean(
-            this.address &&
-            this.address.userName &&
-            this.address.telNumber &&
-            this.addStr
-          )
-        }
-      }
+<script setup>
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/store/user.js'
+
+const userStore = useUserStore()
+const { address, addStr } = storeToRefs(userStore)
+const hasAddress = computed(() => Boolean(
+  address.value &&
+  address.value.userName &&
+  address.value.telNumber &&
+  addStr.value
+))
+
+async function choseAddress() {
+  try {
+    const result = await uni.chooseAddress()
+    const err = Array.isArray(result) ? result[0] : null
+    const succ = Array.isArray(result) ? result[1] : result
+    if (!err && succ && succ.errMsg === 'chooseAddress:ok') {
+      userStore.updateAddress(succ)
+    }
+  } catch (error) {
+    const errorMessage = error && error.errMsg ? error.errMsg : ''
+    if (errorMessage.indexOf('cancel') === -1) {
+      uni.$showMsg('收货地址选择失败，请重试')
+    }
   }
+}
 </script>
 
 <style lang="scss">
