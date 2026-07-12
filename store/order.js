@@ -15,7 +15,7 @@ const mockOrders = [
         title:'无线蓝牙耳机 降噪高音质长续航',
         price:129,
         count:1,
-        image:'/static/user-data/earbuds.png'
+        image:'/static/user-data/earbuds.jpg'
       }
     ],
     subtotal:129,
@@ -38,7 +38,7 @@ const mockOrders = [
         title:'产后收腹带产妇束缚带束腰带',
         price:69,
         count:2,
-        image:'/static/user-data/belt.png'
+        image:'/static/user-data/belt.jpg'
       }
     ],
     subtotal:138,
@@ -61,7 +61,7 @@ const mockOrders = [
         title:'智能护眼台灯 学习阅读灯',
         price:89,
         count:1,
-        image:'/static/user-data/lamp.png'
+        image:'/static/user-data/lamp.jpg'
       }
     ],
     subtotal:89,
@@ -84,7 +84,7 @@ const mockOrders = [
         title:'便携榨汁杯 USB充电随身果汁杯',
         price:59,
         count:1,
-        image:'/static/user-data/juicer.png'
+        image:'/static/user-data/juicer.jpg'
       }
     ],
     subtotal:59,
