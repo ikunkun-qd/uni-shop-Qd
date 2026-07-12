@@ -54,9 +54,33 @@
       },
       {
         "path" : "search/search",
-        "style" : 
+        "style" :
         {
           "navigationBarTitleText" : "",
+          "enablePullDownRefresh" : false
+        }
+      },
+      {
+        "path" : "orders/orders",
+        "style" :
+        {
+          "navigationBarTitleText" : "我的订单",
+          "enablePullDownRefresh" : false
+        }
+      },
+      {
+        "path" : "orders/order_detail",
+        "style" :
+        {
+          "navigationBarTitleText" : "订单详情",
+          "enablePullDownRefresh" : false
+        }
+      },
+      {
+        "path" : "user_data/user_data",
+        "style" :
+        {
+          "navigationBarTitleText" : "我的数据",
           "enablePullDownRefresh" : false
         }
       }

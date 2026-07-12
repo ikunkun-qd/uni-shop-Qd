@@ -1,12 +1,25 @@
+function readStorageObject(key, fallback){
+  const storedValue = uni.getStorageSync(key)
+  if(!storedValue) return fallback
+  if(typeof storedValue === 'object') return storedValue
+
+  try {
+    const parsedValue = JSON.parse(storedValue)
+    return parsedValue && typeof parsedValue === 'object' ? parsedValue : fallback
+  } catch (error) {
+    return fallback
+  }
+}
+
 export default {
   namespaced:true,
   state(){
     return {
       //收货地址
-      address:JSON.parse(uni.getStorageSync('address') || '{}'),
-      token:uni.getStorageSync('token') || 'u12u3uiu31uhu999s0seeueuss$$566&&qq12',
+      address:readStorageObject('address', {}),
+      token:uni.getStorageSync('token') || '',
       // 用户的基本信息
-      userinfo:JSON.parse(uni.getStorageSync('userinfo') || '{}'),
+      userinfo:readStorageObject('userinfo', {}),
       // 定义重定向对象
       redirectInfo:null
     }
@@ -45,6 +58,9 @@ export default {
     }
   },
   getters:{
+    isLoggedIn(state){
+      return Boolean(state.token)
+    },
     addStr(state){
       if(!state.address.provinceName) return ''
       return state.address.provinceName + state.address.cityName + state.address.countyName + state.address.detailInfo

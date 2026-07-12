@@ -25,7 +25,7 @@
     props:{
       item:{
         type:Object,
-        default:{}
+        default:() => ({})
       },
       showRadios:{
         type:Boolean,

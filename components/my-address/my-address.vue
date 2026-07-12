@@ -1,7 +1,7 @@
 <template>
   <view>
     <!-- 选择收货地址按钮 -->
-    <view v-if="JSON.stringify(address) === '{}'" class="address-chose-box">
+    <view v-if="!hasAddress" class="address-chose-box">
       <button type="primary" size="mini" @click="choseAddress">请选择收货地址+</button>
     </view>
     
@@ -44,17 +44,32 @@
     methods:{
       ...mapMutations('m_user', ['updateAddress']),
       async choseAddress(){
-          const [err, succ] = await uni.chooseAddress().catch(err => err)
-          // console.log(err,succ)
-          if(err === null && succ.errMsg === 'chooseAddress:ok'){
-            // this.address = succ
-            this.updateAddress(succ)
+          try {
+            const result = await uni.chooseAddress()
+            const err = Array.isArray(result) ? result[0] : null
+            const succ = Array.isArray(result) ? result[1] : result
+            if(!err && succ && succ.errMsg === 'chooseAddress:ok'){
+              this.updateAddress(succ)
+            }
+          } catch (error) {
+            const errorMessage = error && error.errMsg ? error.errMsg : ''
+            if(errorMessage.indexOf('cancel') === -1){
+              uni.$showMsg('收货地址选择失败，请重试')
+            }
           }
         }
       },
       computed:{
         ...mapState('m_user', ['address']),
-        ...mapGetters('m_user', ['addStr'])
+        ...mapGetters('m_user', ['addStr']),
+        hasAddress(){
+          return Boolean(
+            this.address &&
+            this.address.userName &&
+            this.address.telNumber &&
+            this.addStr
+          )
+        }
       }
   }
 </script>

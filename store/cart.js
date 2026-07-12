@@ -40,6 +40,10 @@ export default{
       state.cart = state.cart.filter(item => item.goods_id !== goods.goods_id)
       this.commit('m_cart/cartStorage')
     },
+    removeCheckedGoods(state){
+      state.cart = state.cart.filter(item => item.goods_state !== true)
+      this.commit('m_cart/cartStorage')
+    },
     updateAllGoodsState(state, newState){
       state.cart.forEach(item => item.goods_state = newState)
       this.commit('m_cart/cartStorage')

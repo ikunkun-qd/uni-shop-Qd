@@ -1,6 +1,6 @@
 <template>
   <!-- 购物车商品显示区域 -->
-  <view v-if="cart.length !== 0" class="cart-container">
+  <view v-if="token && cart.length !== 0" class="cart-container">
     <!-- 收货地址组件 -->
     <my-address></my-address>
     
@@ -24,17 +24,22 @@
   </view>
 
   <!-- 购物车空白区域 -->
-  <view v-else class="empty-cart">
+  <view v-else-if="token" class="empty-cart">
     <image class="empty-image" src="../../static/cart_empty@2x.png"></image>
     <text class="empty-text">空空如也~</text>
+  </view>
+
+  <view v-else class="auth-required">
+    <text>请先登录后查看购物车</text>
   </view>
 </template>
 
 <script>
   import mixBadge from '@/mixins/tabbar-badge.js'
+  import auth from '@/mixins/auth.js'
   import { mapState, mapMutations } from 'vuex';
   export default {
-    mixins:[mixBadge],
+    mixins:[mixBadge, auth],
     computed:{
       ...mapState('m_cart', ['cart'])
     },
@@ -47,6 +52,9 @@
           }
         }]
       };
+    },
+    onShow(){
+      this.requireLogin('/pages/cart/cart')
     },
     methods:{
       ...mapMutations('m_cart', ['removeGoods']),
@@ -100,5 +108,13 @@
     margin-top: 10px;
     font-size: 13px;
   }
+}
+.auth-required{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #999;
+  font-size: 14px;
 }
 </style>

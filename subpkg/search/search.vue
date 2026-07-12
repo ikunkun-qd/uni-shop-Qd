@@ -44,13 +44,32 @@
       }
     },
     onLoad() {
-      this.historyList = JSON.parse(uni.getStorageSync('kw' || []))
+      const storedHistory = uni.getStorageSync('kw')
+      if (Array.isArray(storedHistory)) {
+        this.historyList = storedHistory
+        return
+      }
+
+      if (typeof storedHistory !== 'string' || storedHistory.trim() === '') {
+        this.historyList = []
+        return
+      }
+
+      try {
+        const parsedHistory = JSON.parse(storedHistory)
+        this.historyList = Array.isArray(parsedHistory) ? parsedHistory : []
+      } catch (error) {
+        this.historyList = []
+      }
     },
     methods:{
       input(e){
+        const value = typeof e === 'string'
+          ? e
+          : (e && (e.value || (e.detail && e.detail.value))) || ''
         clearTimeout(this.timer)
         this.timer = setTimeout(()=>{
-          this.kw = e
+          this.kw = value.trim()
           this.getSearchList()
         }, 1000)
       },
@@ -81,13 +100,16 @@
       },
       clean(){
         this.historyList = []
-        uni.setStorageSync('kw', [])
+        uni.setStorageSync('kw', JSON.stringify([]))
       },
       gotoGoodsList(goods_name){
         uni.navigateTo({
-          url:'/subpkg/goods_list/goods_list?query=' + goods_name
+          url:'/subpkg/goods_list/goods_list?query=' + encodeURIComponent(goods_name)
         })
       }
+    },
+    beforeDestroy() {
+      clearTimeout(this.timer)
     }
   }
 </script>

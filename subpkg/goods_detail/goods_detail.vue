@@ -12,9 +12,9 @@
       <view class="price">￥{{goods_info.goods_price}}</view>
       <view class="goods-info-body">
         <view class="goods-name">{{goods_info.goods_name}}</view>
-        <view class="fav">
-          <uni-icons type="star" size="18" color="gray"></uni-icons>
-          <text>收藏</text>
+        <view class="fav" @click="toggleFavorite">
+          <uni-icons :type="isFavorite ? 'star-filled' : 'star'" size="18" :color="isFavorite ? '#c00000' : 'gray'"></uni-icons>
+          <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
         </view>
       </view>
       <view class="yf">快递：免费运</view>
@@ -31,11 +31,13 @@
 
 <script>
   import { mapGetters, mapState } from 'vuex';
-import cart from '../../store/cart';
+  import auth from '@/mixins/auth.js'
   export default {
+    mixins:[auth],
     data() {
       return {
         goods_info:{},
+        isFavorite:false,
         options: [{
         			icon: 'shop',
         			text: '店铺',
@@ -121,24 +123,55 @@ import cart from '../../store/cart';
         })
       },
       onClick(e){
-        if(e.content.text === '购物车'){
+        const text = e && e.content && e.content.text
+        if(text === '购物车'){
+          if(!this.requireLogin('/pages/cart/cart')) return
           uni.switchTab({
             url:'/pages/cart/cart'
           })
+        } else if(text === '店铺'){
+          uni.showToast({
+            title:'店铺功能演示中',
+            icon:'none'
+          })
         }
       },
+      toggleFavorite(){
+        this.isFavorite = !this.isFavorite
+        uni.showToast({
+          title:this.isFavorite ? '收藏成功' : '已取消收藏',
+          icon:'none'
+        })
+      },
+      addCurrentGoods(showToast = true){
+        if(!this.goods_info.goods_id) return false
+        if(!this.requireLogin('/pages/cart/cart')) return false
+        const goods = {
+          goods_id:this.goods_info.goods_id,
+          goods_name:this.goods_info.goods_name,
+          goods_price:this.goods_info.goods_price,
+          goods_count:1,
+          goods_small_logo:this.goods_info.goods_small_logo,
+          goods_state:true
+        }
+        this.$store.commit('m_cart/addCart', goods)
+        if(showToast){
+          uni.showToast({
+            title:'已加入购物车',
+            icon:'success'
+          })
+        }
+        return true
+      },
       buttonClick(e){
-        // console.log(e)
-        if(e.content.text === '加入购物车'){
-          const goods = {
-            goods_id:this.goods_info.goods_id,
-            goods_name:this.goods_info.goods_name,
-            goods_price:this.goods_info.goods_price,
-            goods_count:1,
-            goods_small_logo:this.goods_info.goods_small_logo,
-            goods_state:true
-          }
-          this.$store.commit('m_cart/addCart', goods)
+        const text = e && e.content && e.content.text
+        if(text === '加入购物车'){
+          this.addCurrentGoods()
+        } else if(text === '立即购买'){
+          if(!this.addCurrentGoods(false)) return
+          uni.switchTab({
+            url:'/pages/cart/cart'
+          })
         }
       }
     }

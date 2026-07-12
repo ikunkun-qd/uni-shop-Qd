@@ -93,6 +93,9 @@
             "urlCheck" : true,
             "checkSiteMap" : false
         },
+        "optimization" : {
+            "subPackages" : true
+        },
         "usingComponents" : true,
         "requiredPrivateInfos" : [ "chooseAddress" ]
     },
